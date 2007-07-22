@@ -159,6 +159,8 @@
 		this.margin_left	= 0;
 		this.margin_right	= 0;
 		
+		this.color = '#000000';
+		
 		// Splitting by the ;
 		var arr:Array = txt.split(";");
 		

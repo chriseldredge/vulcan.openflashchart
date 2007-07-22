@@ -26,6 +26,8 @@
 		// patch from Will Henry
 		if( vals.length > 6 )
 			this.fill_colour = _root.get_colour( vals[6] );
+		else
+			this.fill_colour = this.colour;
 			
 		// draw the area behine the line:
 		this.mc_area = _root.createEmptyMovieClip( name+'_area', _root.getNextHighestDepth());

@@ -1,4 +1,4 @@
-&title=Mixed Line and Bar Charts,35,#800000&
+&title=Mixed Line and Bar Charts,{font-size:35px; color: #800000}&
 &y_legend=Your legend here!,12,#736AFF&
 &y_ticks=5,10,2&
 &bar=50,#9933CC,Purple Bar,10&

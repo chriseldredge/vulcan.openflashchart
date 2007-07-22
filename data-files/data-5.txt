@@ -1,4 +1,4 @@
-&title=Area Chart,30,&
+&title=Area Chart,{font-size:30px}&
 &x_label_style=10,#9933CC,2&
 &y_legend=Open Flash Chart,12,#736AFF&
 &y_ticks=5,10,4&
