@@ -1,4 +1,4 @@
-&title=Background Image,30,&
+&title=Background Image,{font-size:30px}&
 &y_legend=Attacks,12,0x736AFF&
 &y_ticks=5,10,8&
 &line_hollow=2,0x80a033,Fatal kitten attacks in 2007,10,4&

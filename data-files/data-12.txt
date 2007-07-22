@@ -1,4 +1,4 @@
-&title=Gothic Department,25,#FFB900&
+&title=Gothic Department,{font-size:25px;color:#FFB900}&
 &x_legend=Sacrifice breakdown (2007),12,#FFFFFF&
 &x_label_style=14,#FFFFFF,2,1&
 &x_axis_steps=1&

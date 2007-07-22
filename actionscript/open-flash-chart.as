@@ -304,7 +304,10 @@ function make_chart()
 	// we build the graph from top to bottom 
 	_root._title = new Title( this );
 	_root._x_legend = new XLegend( this );
-	_root._y_legend = new YLegend( this );
+	_root._y_legend = new YLegend( this , 1);
+	
+	if(_root.lv.show_y2) 
+		_root._y2_legend = new YLegend( this , 2);
 	
 	var xTicks = 5;
 	if( this.x_ticks != undefined )
@@ -312,8 +315,11 @@ function make_chart()
 
 	// size, colour
 	var x_label_style:XLabelStyle = new XLabelStyle( this );
-	var y_label_style:YLabelStyle = new YLabelStyle( this );
+	var y_label_style:YLabelStyle = new YLabelStyle( this, 1 );
 	
+	if(_root.lv.show_y2) 
+		var y_label_style2:YLabelStyle = new YLabelStyle( this, 2 );
+		
 	
 	// create X labels and measure the height:	
 	_root._x_axis_labels = new XAxisLabels( this, x_label_style );
@@ -335,8 +341,21 @@ function make_chart()
 		y_label_style,
 		_root._min_max.y_min,
 		_root._min_max.y_max,
-		_root._y_ticks.steps
+		_root._y_ticks.steps,
+		1,
+		this
 		);
+
+	if(_root.lv.show_y2) {
+		_root._y_axis_labels2 = new YAxisLabels(
+			y_label_style2,
+			_root._min_max.y2_min,
+			_root._min_max.y2_max,
+			_root._y_ticks.steps,
+			2,
+			this
+			);
+	}
 
 	
 	_root._y_axis = new YAxis(
@@ -344,8 +363,20 @@ function make_chart()
 		this,
 		_root._min_max.y_min,
 		_root._min_max.y_max,
-		_root._y_ticks.steps
+		_root._y_ticks.steps,
+		1
 		);
+
+	if(_root.lv.show_y2) {
+		_root._y_axis2 = new YAxis(
+			_root._y_ticks,
+			this,
+			_root._min_max.y_min,
+			_root._min_max.y_max,
+			_root._y_ticks.steps,
+			2
+			);
+	}
 	
 	// The chart values are defined last and are on TOP of every thing else
 	_root.chartValues = new Values( this, _root._background.colour, _root._x_axis_labels.labels );
@@ -426,17 +457,32 @@ function move()
 	//
 	// measure the box:
 	//
+	var top:Number = _root._title.height()+_root._keys.height();
+	var left:Number = _root._y_legend.width()+_root._y_axis_labels.width()+_root._y_axis.width();
+	var right:Number = Stage.width;
+	// do we jiggle the box smaller because the last X Axis label
+	// is hanging off the end of the screen?
+	var jiggle:Boolean = true;
+	
+	if(_root.lv.show_y2)
+	{
+		right -= _root._y2_legend.width()+_root._y_axis_labels2.width()+_root._y_axis2.width()+4;
+		// no need to shrink the box:
+		jiggle = false;
+	}
+	
+	var bottom:Number = Stage.height-(_root._x_axis_labels.height()+_root._x_legend.height()+_root._x_axis.height())
+ 	
 	var b:Box = new Box(
-		(_root._title.height()+_root._keys.height()+_root.css.get('margin-top')),			    // <-- from top
-		(_root._y_legend.width()+_root._y_axis_labels.width()+_root._y_axis.width()),		// <-- from the left
-		(Stage.width - _root.css.get('margin-right')),							// <-- from right
-		Stage.height-(_root._x_axis_labels.height()+_root._x_legend.height()+_root._x_axis.height()), // <-- up from the bottom
+		top, left, right, bottom,
 		_root._min_max.y_min,
 		_root._min_max.y_max,					// <-- scale everything between min/max
 		_root._x_axis_labels.first_label_width(),
 		_root._x_axis_labels.last_label_width(),
-		_root.chartValues.styles[0].values.length
+		_root.chartValues.styles[0].values.length,
+		jiggle
 		);
+		
 
 	//
 	// tell everything else to move, the order in
@@ -447,9 +493,17 @@ function move()
 	_root._inner_background.move( b );
 	_root._title.move();
 	_root._x_legend.move();
-	_root._y_legend.move();
+	_root._y_legend.move(1);
+
+	
+	if(_root.lv.show_y2)
+		_root._y2_legend.move(2);
 	
 	_root._y_axis_labels.move( _root._y_legend.width(), b );
+
+	// position of second y axel labels..
+	if(_root.lv.show_y2)
+		_root._y_axis_labels2.move( Stage.width-(_root._y2_legend.width()+_root._y_axis_labels2.width()), b );
 
 	// move x labels
 	_root._x_axis_labels.move(
@@ -457,13 +511,19 @@ function move()
 		_root.chartValues.styles[0].values.length,
 		b );
 	
-	_root._y_axis.move( b );
+	_root._y_axis.move( b , 1);
+	
+	if(_root.lv.show_y2)	
+		_root._y_axis2.move( b , 2 );
+	
 	_root._x_axis.move( b );
 	
 	_root.chartValues.move(
 		b,
 		_root._min_max.y_min,
-		_root._min_max.y_max					// <-- scale everything between min/max
+		_root._min_max.y_max,					// <-- scale everything between min/max
+		_root._min_max.y2_min,
+		_root._min_max.y2_max
 		);
 }
 
@@ -598,7 +658,7 @@ setContextualMenu();
 
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-14.txt";
+	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-2.txt";
 	
 lv.load(_root.data);
 

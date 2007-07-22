@@ -1,4 +1,4 @@
-&title=Many data lines,30,#000000&
+&title=Many data lines,{font-size:30px; color:#000000}&
 
 
 &pie=60,#9933CC,#000000,false,3&

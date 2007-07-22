@@ -1,4 +1,4 @@
-&title=Profit,25,0xFF8040&
+&title=Profit,{font-size:25; color: #FF8040}&
 &x_label_style=10,0x9933CC,0,6&
 &y_ticks=5,10,5&
 &line_dot=3,0x9933CC,Beer money,18,6&

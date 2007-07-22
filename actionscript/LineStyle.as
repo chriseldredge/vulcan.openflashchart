@@ -1,4 +1,4 @@
-﻿class LineStyle extends Style
+class LineStyle extends Style
 {
 	private var mc:MovieClip;
 	
@@ -43,7 +43,7 @@
 					new ExPoint(
 						b.left,													// x position of value
 						center,
-						b.getY( Number(this.values[i]) ),
+						b.getY2( Number(this.values[i]), tickY),
 						0,//bar_width,
 						b.bottom,
 						Number( this.values[i] )
@@ -53,6 +53,7 @@
 		}
 	}
 	
+	// Draw lines...
 	public function draw()
 	{
 		this.mc.clear();
@@ -119,6 +120,7 @@
 	public function move_dot( val:ExPoint, mc:MovieClip )
 	{
 		//trace(val.center);
+		// Move and fix the dots...
 		mc._x = val.center;
 		mc._y = val.y;
 	}

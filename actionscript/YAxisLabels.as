@@ -3,27 +3,41 @@
 	public var labelNames:Array;
 	private var steps:Number;
 	
-	function YAxisLabels( y_label_style:YLabelStyle, min:Number, max:Number, steps:Number )
+	function YAxisLabels( y_label_style:YLabelStyle, min:Number, max:Number, steps:Number, nr:Number, lv:LoadVars )
 	{
 		this.steps = steps;
 		this.labelNames = [];
+		var name:String = '';
 		
-		// are the Y Labels visible?
-		if( !y_label_style.show_labels )
-			return;
+		if(nr == 1)
+		{
+			// are the Y Labels visible?
+			if( !y_label_style.show_labels )
+				return;
 			
-		trace("!!");
+			name = 'y_label_';
+		}
+		else if (nr = 2)
+		{
+			
+			// are the Y Labels visible?
+			if( !lv.show_y2 )
+				return;
+			
+			name = 'y_label_2_';
+		}
 			
 		// labels
 		var every:Number = (max-min)/this.steps;
 		
 		for( var i:Number=min; i<=max; i+=every )
 		{
-			this.yAxisLabel( i, 'y_label_'+String(i), y_label_style );
-			this.labelNames.push( 'y_label_'+String(i) );
+			this.yAxisLabel( i, name+String(i), y_label_style, nr );
+			this.labelNames.push( name+String(i) );
 		}
 	}
 
+	
 	
 	function yAxisLabel( title:Number, name:String, y_label_style:YLabelStyle )
 	{

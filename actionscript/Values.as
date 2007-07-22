@@ -1,4 +1,4 @@
-﻿class Values
+class Values
 {
 	public var styles:Array=Array();
 
@@ -76,25 +76,79 @@
 		return bar_count;
 	}
 	
+	// If the current line is to be drawn on y2 (defined in data values, y2_lines)
+	private function gety2line(line) {
+			var y2lines:Array = _root.lv.y2_lines.split(",");
+			var y2:Boolean = false;
+			for( var i:Number=0; i<y2lines.length; i++ )
+			{
+				if(y2lines[i] == line) y2 = true; 
+			}
+			
+			return y2;
+	}
+	
 	// get x, y co-ords of vals
-	function move( b:Box, min:Number, max:Number )
+	function move( b:Box, min:Number, max:Number, min2:Number, max2:Number )
 	{
-		var tickY:Number = b.height / (max-min);
+		// If we have a second y-axel
+		if (_root.lv.show_y2 && _root.lv.y2_lines) {
+			var y2lines:Array = _root.lv.y2_lines.split(",");
+			
+
+			
+			for( var c:Number=0; c<this.styles.length; c++ )
+			{				
+				// If the current axel is to be drawn on y2 (defined in data values, y2_lines)
+				if(gety2line(c+1)) {
+
+					// move values.. 
+					var tickY:Number = b.height / (max2-min2);
+					var bar_count:Number = this._count_bars();
+					var bar:Number = 0;
+					
+						this.styles[c].valPos( b, tickY, min2, bar_count, bar );
+						if( this.styles[c].is_bar )
+							bar++;
+				}else{
+					// move values.. 
+					var tickY:Number = b.height / (max-min);
+
+					var bar_count:Number = this._count_bars();
+					var bar:Number = 0;
+
+						this.styles[c].valPos( b, tickY, min, bar_count, bar );
+						if( this.styles[c].is_bar )
+							bar++;
+					} // else..	
+				}
+			
+				// draw the bars and dots ontop of the line
+				for( var c:Number=0; c < this.styles.length; c++ )
+				{
+					this.styles[c].draw();
+				}
+			
+		}else{
 		
-		var bar_count:Number = this._count_bars();
-		var bar:Number = 0;
-		
-		for( var c:Number=0; c<this.styles.length; c++ )
-		{
-			this.styles[c].valPos( b, tickY, min, bar_count, bar );
-			if( this.styles[c].is_bar )
-				bar++;
+			// move values.. 
+			var tickY:Number = b.height / (max-min);
+			var bar_count:Number = this._count_bars();
+			var bar:Number = 0;
+			
+			for( var c:Number=0; c<this.styles.length; c++ )
+			{
+				this.styles[c].valPos( b, tickY, min, bar_count, bar );
+				if( this.styles[c].is_bar )
+					bar++;
+			}
+			
+			// draw the bars and dots ontop of the line
+			for( var c:Number=0; c < this.styles.length; c++ )
+			{
+				this.styles[c].draw();
+			}
 		}
-		
-		// draw the bars and dots ontop of the line
-		for( var c:Number=0; c < this.styles.length; c++ )
-		{
-			this.styles[c].draw();
-		}
+
 	}
 }

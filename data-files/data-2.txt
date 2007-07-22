@@ -1,4 +1,4 @@
-&title=Portreath beach,25,0x736AFF&
+&title=Portreath beach,{color: #736AFF; font-size: 25;}&
 &x_legend=Waves in Feburary,20,0x736AFF&
 &y_legend=Wave height (cm),15,0x736AFF&
 &y_ticks=5,10,6&

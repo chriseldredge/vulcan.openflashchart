@@ -14,15 +14,22 @@
 	public function Box( top:Number, left:Number, right:Number, bottom:Number,
 						y_min:Number, y_max:Number,
 						x_left_label_width:Number, x_right_label_width:Number,
-						count:Number )
+						count:Number, jiggle:Boolean )
 	{
 		
-		right = this.jiggle( left, right, x_right_label_width, count );
-		var tmp_left:Number = this.shrink_left( left, right, x_left_label_width, count );
+		var tmp_left:Number = left;
+		
+		if( jiggle )
+		{
+			right = this.jiggle( left, right, x_right_label_width, count );
+			tmp_left = this.shrink_left( left, right, x_left_label_width, count );
+		}
 		
 		this.top = top;
 		this.left = Math.max(left,tmp_left);
-		this.right = right;
+		
+		// round this down to the nearest int:
+		this.right = Math.floor( right );
 		this.bottom = bottom;
 		this.width = this.right-this.left;
 		this.height = bottom-top;
@@ -98,6 +105,17 @@
 		var y:Number = this.zero;
 		// move up (-Y) to our point (don't forget that y_min will shift it down)
 		y -= i*this.steps;
+		return y;
+	}
+	
+	// takes a value and returns the screen Y location
+	function getY2( i:Number, steps )
+	{
+		// start at zero:
+		var y:Number = this.zero;
+		// move up (-Y) to our point (don't forget that y_min will shift it down)
+		//y -= i*this.steps;
+		y -= i*steps;
 		return y;
 	}
 }
