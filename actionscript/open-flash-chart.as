@@ -658,7 +658,7 @@ setContextualMenu();
 
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-2.txt";
+	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-18.txt";
 	
 lv.load(_root.data);
 

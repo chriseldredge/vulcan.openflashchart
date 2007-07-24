@@ -1,4 +1,4 @@
-class Values
+﻿class Values
 {
 	public var styles:Array=Array();
 
@@ -39,6 +39,8 @@ class Values
 			return new BarStyle(lv['bar'+name],'bar_'+c);
 		else if( lv['filled_bar'+name] != undefined )
 			return new FilledBarStyle(lv['filled_bar'+name],'bar_'+c);
+		else if( lv['glass_bar'+name] != undefined )
+			return new BarGlassStyle(lv['glass_bar'+name],'bar_'+c);
 		else if( lv['pie'+name] != undefined )
 			return new PieStyle(lv['pie'+name], lv.x_labels!=undefined ? lv['values'] : "", lv['links']);
 	}
