@@ -22,3 +22,21 @@ String.prototype.replace = function() {
 	}
 	return newText;
 };
+
+var TAB   = 9;
+var LINEFEED = 10;
+var CARRIAGE = 13; 
+var SPACE = 32; 
+
+String.prototype.LTrim = function()
+{
+   var s = this.toString();
+   var i = 0;   
+   while(s.charCodeAt(i) == SPACE 
+      || s.charCodeAt(i) == CARRIAGE 
+      || s.charCodeAt(i) == LINEFEED 
+      || s.charCodeAt(i) == TAB) {
+      i++;
+   }   
+   return s.substring(i,s.length);
+};

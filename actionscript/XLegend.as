@@ -3,6 +3,7 @@
 
 	// override the MovieClip name:
 	private var name:String = 'x_legend';
+	public var mc:TextField;
 	
 	function XLegend( lv:LoadVars )
 	{
