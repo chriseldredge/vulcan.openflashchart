@@ -7,13 +7,22 @@
 	private var margin_bottom:Number;
 	private var margin_left:Number;
 	private var margin_right:Number;
+	
+	private var padding:String;
+	public var padding_top:Number=0;
+	public var padding_bottom:Number=0;
+	public var padding_left:Number=0;
+	public var padding_right:Number=0;
+	
 	private var font_weight:String;
 	private var font_style:String;
 	private var font_family:String;
 	private var color:String;
 	private var stop_process:Number;  // Flag for disable checking
+	private var bg_colour:String;
 	
-	private function trim( txt:String ) {
+	private function trim( txt:String )
+	{
 		var l = 0; var r = txt.length - 1;
 		while(txt.charAt(l) == ' ' or txt.charAt(l) == "\t" ) l++;
 		while(txt.charAt(r) == ' ' or txt.charAt(r) == "\t" ) r--;
@@ -42,14 +51,16 @@
 		}
 	}
 	
-	private function getAttribute( attribute:String, txt:String ) {
+	private function getAttribute( txt:String ) {
 		
-		if (this.stop_process == 1) return;
+//		if (this.stop_process == 1) return;
 		
-		var p:Number = txt.lastIndexOf( attribute + ':' );
-		if ( p >= 0  ) {
+//		var p:Number = txt.lastIndexOf( attribute + ':' );
+		var arr:Array = txt.split(":");
+		if( arr.length==2 )
+		{
 			this.stop_process = 1;
-			this.set(attribute, trim( txt.substring(p + attribute.length+1) ) );
+			this.set( arr[0], trim(arr[1]) );
 		}
 	}
 	
@@ -62,70 +73,117 @@
 			case "margin-bottom"		: return this.margin_bottom;
 			case "margin-left"			: return this.margin_left;
 			case "margin-right"			: return this.margin_right;
+			case "padding-top"			: return this.padding_top;
+			case "padding-bottom"		: return this.padding_bottom;
+			case "padding-left"			: return this.padding_left;
+			case "padding-right"		: return this.padding_right;
 			case "font-weight"			: return ToNumber(this.font_weight);
 			case "font-style"			: return this.font_style;
 			case "font-family"			: return this.font_family;
 			case "color"				: return this.color;
+			case "background-color"		: return this.bg_colour;
 			default						: return 0;
 		}
 	}
 	
 	// FUCKING!! Flash without By reference String parameters on functions
-	public function set( cad:String, val: String ) {
-		switch (cad) {
+	public function set( cad:String, val:String )
+	{
+		cad = trim( cad );
+	
+		switch( cad )
+		{
 			case "text-align"			: this.text_align = val; break;
 			case "font-size"			: this.font_size = val; break;
 			case "text-decoration"		: this.text_decoration = val; break;
-			case "margin"				: this.margin = val; break;
+			case "margin":
+				this.margin = setMargin(val);
+				break;
 			case "margin-top"			: this.margin_top = ToNumber(val); break;
 			case "margin-bottom"		: this.margin_bottom = ToNumber(val); break;
 			case "margin-left"			: this.margin_left = ToNumber(val); break;
 			case "margin-right"			: this.margin_right = ToNumber(val); break;
+			
+			case 'padding':
+				this.padding = setPadding(val);
+				break;
+				
+			case "padding-top"			: this.padding_top = ToNumber(val); break;
+			case "padding-bottom"		: this.padding_bottom = ToNumber(val); break;
+			case "padding-left"			: this.padding_left = ToNumber(val); break;
+			case "padding-right"		: this.padding_right = ToNumber(val); break;
+			
 			case "font-weight"			: this.font_weight = val; break;
 			case "font-style"			: this.font_style = val; break;
 			case "font-family"			: this.font_family = val; break;
-			case "color"				: this.color = _root._root.get_colour( val ); break;
+			case "color"				: this.color = _root.get_colour( val ); break;
+			case "background-color":
+				this.bg_colour = _root.get_colour( val);
+				break;
 		}
 	}
+	
+	
+	private function setPadding( val:String )
+	{
+
+		val = trim( val );
+		var arr:Array = val.split(' ');
 		
-	private function stripMargin() {
+		switch( arr.length )
+		{
+			
+			// margin: 30px;
+			case 1:
+				this.padding_top	= ToNumber(arr[0]);
+				this.padding_right	= ToNumber(arr[0]);
+				this.padding_bottom	= ToNumber(arr[0]);
+				this.padding_left	= ToNumber(arr[0]);
+				break;
+				
+			// do the rest later...
+		}
+	}
+	
+	private function setMargin( val:String )
+	{
+
+		val = trim( val );
+		var arr:Array = val.split(' ');
 		
-		if ( this.margin != undefined ) {
-			var txt = removeDoubleSpaces( this.margin );
-			var arr:Array = this.margin.split(' ');
-			switch ( arr.length ){
+		switch( arr.length )
+		{
+			
+			// margin: 30px;
+			case 1:
+				this.margin_top	= ToNumber(arr[0]);
+				this.margin_right	= ToNumber(arr[0]);
+				this.margin_bottom= ToNumber(arr[0]);
+				this.margin_left	= ToNumber(arr[0]);
+				break;
+			
+			// margin: 15px 5px;
+			case 2:
+				this.margin_top	= ToNumber(arr[0]);
+				this.margin_right	= ToNumber(arr[1]);
+				this.margin_bottom= ToNumber(arr[0]);
+				this.margin_left	= ToNumber(arr[1]);
+				break;
 				
-				// margin: 30px;
-				case 1:
-					this.margin_top	= ToNumber(arr[0]);
-					this.margin_right	= ToNumber(arr[0]);
-					this.margin_bottom= ToNumber(arr[0]);
-					this.margin_left	= ToNumber(arr[0]);
-					break;
+			// margin: 15px 5px 10px;
+			case 3:
+				this.margin_top	= ToNumber(arr[0]);
+				this.margin_right	= ToNumber(arr[1]);
+				this.margin_bottom= ToNumber(arr[2]);
+				this.margin_left	= ToNumber(arr[1]);
+				break;
 				
-				// margin: 15px 5px;
-				case 2:
-					this.margin_top	= ToNumber(arr[0]);
-					this.margin_right	= ToNumber(arr[1]);
-					this.margin_bottom= ToNumber(arr[0]);
-					this.margin_left	= ToNumber(arr[1]);
-					break;
-					
-				// margin: 15px 5px 10px;
-				case 3:
-					this.margin_top	= ToNumber(arr[0]);
-					this.margin_right	= ToNumber(arr[1]);
-					this.margin_bottom= ToNumber(arr[2]);
-					this.margin_left	= ToNumber(arr[1]);
-					break;
-					
-				// margin: 1px 2px 3px 4px;
-				default:
-					this.margin_top	= ToNumber(arr[0]);
-					this.margin_right	= ToNumber(arr[1]);
-					this.margin_bottom= ToNumber(arr[2]);
-					this.margin_left	= ToNumber(arr[3]);
-			}
+			// margin: 1px 2px 3px 4px;
+			default:
+				this.margin_top	= ToNumber(arr[0]);
+				this.margin_right	= ToNumber(arr[1]);
+				this.margin_bottom= ToNumber(arr[2]);
+				this.margin_left	= ToNumber(arr[3]);
 		}
 	}
 	
@@ -164,24 +222,26 @@
 		// Splitting by the ;
 		var arr:Array = txt.split(";");
 		
+		trace(arr);
+		
 		// Checking all the types of css params we accept and writing to internal variables of the object class
 		for (var i = 0; i < arr.length; i++) {
-			this.stop_process = 0;  // Flag of processed
-			if ( arr[i] == '' ) continue;
-			getAttribute('text-align', arr[i]);
-			getAttribute('font-size', arr[i]);
-			getAttribute('text-decoration', arr[i]);
-			getAttribute('margin', arr[i]);
-			getAttribute('margin-top', arr[i]);
-			getAttribute('margin-bottom', arr[i]);
-			getAttribute('margin-left', arr[i]);
-			getAttribute('margin-right', arr[i]);
-			getAttribute('font-weight', arr[i]);
-			getAttribute('font-family', arr[i]);
-			getAttribute('color', arr[i]);
+//			this.stop_process = 0;  // Flag of processed
+//			if ( arr[i] == '' ) continue;
+			getAttribute(arr[i]);
+//			getAttribute('font-size', arr[i]);
+//			getAttribute('text-decoration', arr[i]);
+//			getAttribute('margin', arr[i]);
+//			getAttribute('margin-top', arr[i]);
+//			getAttribute('margin-bottom', arr[i]);
+//			getAttribute('margin-left', arr[i]);
+//			getAttribute('margin-right', arr[i]);
+//			getAttribute('font-weight', arr[i]);
+//			getAttribute('font-family', arr[i]);
+//			getAttribute('color', arr[i]);
 		}
 						
 		// if the user assigns a complex margin we need to strip it
-		stripMargin();
+		//stripMargin();
 	}
 }

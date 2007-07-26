@@ -1,6 +1,6 @@
 ﻿class Title
 {
-	public var mc:TextField;
+	public var mc:MovieClip;
 	public var title:String = '';
 	public var colour:Number;
 	public var size:Number;
@@ -17,20 +17,6 @@
 		
 		this.style = new Css( tmp[1] );
 		this.build( tmp[0] );
-		return;
-		
-		
-		if( tmp.length < 3 )
-		{
-			trace( 'Title error' );
-			return;		// <-- should report an error
-		}
-		
-		this.size = Number( tmp[1] );
-		this.colour = _root.get_colour( tmp[2] );
-		
-		if( tmp.length == 4 )
-			this.top_padding = Number( tmp[3] );
 	}
 	
 	function build( text:String )
@@ -38,9 +24,12 @@
 		this.title = text;
 		
 		if( this.mc == undefined )
-			this.mc = _root.createTextField( 'title', _root.getNextHighestDepth(), 0, 0, 200, 200 );
+		{
+			this.mc = _root.createEmptyMovieClip( "oops", _root.getNextHighestDepth() );
+			this.mc.txt = this.mc.createTextField( 'title', _root.getNextHighestDepth(), 0, 0, 200, 200 );
+		}
 			
-		this.mc.text = this.title;
+		this.mc.txt.text = this.title;
 		
 		var fmt:TextFormat = new TextFormat();
 		fmt.color = this.style.get( 'color' );
@@ -49,8 +38,22 @@
 		
 		fmt.align = "center";
 	
-		this.mc.setTextFormat(fmt);
-		this.mc.autoSize = "left";
+		this.mc.txt.setTextFormat(fmt);
+		this.mc.txt.autoSize = "left";
+		
+		this.mc.txt._y = this.style.padding_top;
+		this.mc.txt._x = this.style.padding_left;
+		
+		var height:Number = this.style.padding_top+this.mc.txt._height+this.style.padding_bottom;
+		var width:Number = this.style.padding_left+this.mc.txt._width+this.style.padding_right;
+
+		this.mc.beginFill( this.style.get( 'background-color' ), 100);
+		this.mc.moveTo(0, 0);
+		this.mc.lineTo(width, 0);
+		this.mc.lineTo(width, height);
+		this.mc.lineTo(0, height);
+		this.mc.lineTo(0, 0);
+		this.mc.endFill();
 	}
 	
 	function move()
@@ -87,6 +90,12 @@
 		if( this.mc == undefined )
 			return 0;
 		else
-			return this.mc._height+this.style.get( 'margin-top' )+this.style.get( 'margin-bottom' );
+		{
+			return this.style.padding_top+
+				this.style.get( 'margin-top' )+
+				this.mc.txt._height+
+				this.style.padding_bottom+
+				this.style.get( 'margin-bottom' );
+		}
 	}
 }
