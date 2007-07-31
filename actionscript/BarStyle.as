@@ -16,7 +16,7 @@
 	public function parse_bar( val:String )
 	{
 		var vals:Array = val.split(",");
-		
+		trace(vals);
 		this.alpha = Number( vals[0] );
 		this.colour = _root.get_colour(vals[1]);
 		
@@ -43,6 +43,8 @@
 			mc.onRollOver = _root.FadeIn;
 			mc.onRollOut = _root.FadeOut;
 			
+			//mc.onRollOver = ChartUtil.glowIn;
+			
 			// this is used in FadeIn and FadeOut
 			mc.tool_tip_title = labels[i];
 			
@@ -57,12 +59,12 @@
 	{
 		this.ExPoints=Array();
 		
-		var item_width:Number = b.width / values.length;
+		var item_width:Number = b.width_() / values.length;
 		
 		// the bar(s) have gaps between them:
 		var bar_set_width:Number = item_width*0.8;
 		// get the margin between sets of bars:
-		var bar_left:Number = b.left+((item_width-bar_set_width)/2);
+		var bar_left:Number = b.left_()+((item_width-bar_set_width)/2);
 		// 1 bar == 100% wide, 2 bars = 50% wide each
 		var bar_width:Number = bar_set_width/bar_count;
 		

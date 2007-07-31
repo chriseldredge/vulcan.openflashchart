@@ -92,10 +92,10 @@
 		else
 		{
 			return this.style.padding_top+
-				this.style.get( 'margin-top' )+
+				this.style.margin_top+
 				this.mc.txt._height+
 				this.style.padding_bottom+
-				this.style.get( 'margin-bottom' );
+				this.style.margin_bottom;
 		}
 	}
 }

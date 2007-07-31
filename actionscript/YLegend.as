@@ -52,11 +52,9 @@
 		if( this.mc == undefined )
 			return;
 			
-
-			
 		this.mc._y = (Stage.height/2)+(this.mc._height/2);
 		if(nr == 2) 
-			this.mc._x = Stage.width-20;
+			this.mc._x = Stage.width-this.mc._width;
 		else
 			this.mc._x = 0;
 	}

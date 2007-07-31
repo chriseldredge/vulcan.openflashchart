@@ -124,14 +124,10 @@
 	
 	function move( yPos:Number, count:Number, b:Box )
 	{
-		var width = (b.right-b.left);
-		var item_width:Number = width / count;
-		var left:Number = b.left+(item_width/2);
-		
 		var i:Number = 0;
 		for( var pos:Number=0; pos < this.mcs.length; pos++ )
 		{
-			this.mcs[pos]._x = left + (i*item_width);
+			this.mcs[pos]._x = b.get_x_tick_pos(i);
 			this.mcs[pos]._y = yPos;
 			i+=this.style.step;
 		}

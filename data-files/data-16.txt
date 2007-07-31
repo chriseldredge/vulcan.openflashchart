@@ -20,7 +20,7 @@
 &x_grid_colour=#cedcea&
 &y_axis_colour=#164166&
 &y_grid_colour=#cedcea&
-&_inner_background=#FFFFFF&
+&_inner_background=#FF0000&
 
 &show_y2=true&
 &y2_axis_colour=#164166&
@@ -30,6 +30,6 @@
 &y2_min=0&
 &y2_max=1700&
 
-&y2_legend=Free Ram (mb),12,0x164166&
+&y2_legend=Free Ram (mb) xxxxxxxxx,12,0x164166&
 
 &y_legend=Max Users,12,0x164166&

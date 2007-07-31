@@ -1,4 +1,4 @@
-class LineStyle extends Style
+﻿class LineStyle extends Style
 {
 	private var mc:MovieClip;
 	
@@ -26,8 +26,8 @@ class LineStyle extends Style
 	{
 		this.ExPoints=Array();
 		
-		var item_width:Number = b.width / values.length;
-		var point:Number = b.left+(item_width/2);
+		var item_width:Number = b.width_() / values.length;
+		var point:Number = b.left_()+(item_width/2);
 		
 		for( var i:Number=0; i < this.values.length; i++)
 		{

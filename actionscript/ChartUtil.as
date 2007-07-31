@@ -51,21 +51,68 @@ static function get_colour( col:String ) :Number
 	}
 
 	static function FadeOut(mc:MovieClip) : Void {
-	mc.onEnterFrame = function ()
-    {
-			
-        if( (mc._alpha-5) > mc._alpha_original )
-        {
-            mc._alpha -= 5;
-        }
-        else
-        {
-			mc._alpha = mc._alpha_original;
-			_root.hide_tip( mc );
-            delete mc.onEnterFrame;
-        }
+		mc.onEnterFrame = function ()
+		{
+				
+			if( (mc._alpha-5) > mc._alpha_original )
+			{
+				mc._alpha -= 5;
+			}
+			else
+			{
+				mc._alpha = mc._alpha_original;
+				_root.hide_tip( mc );
+				delete mc.onEnterFrame;
+			}
+		};
+	
+	}
+
+/*
+    //import flash.filters.GlowFilter;
+	static function GlowIn(mc :MovieClip, tooltip_follow:Boolean) : Void
+	{
+    	var gf:GlowFilter = new flash.filters.GlowFilter(0x356D83, 100, 3, 3, 5, 3, false, false);
+    	mc.filters = [gf];
+    	mc.onRollOver = function()
+		{
+	    	this.onEnterFrame = function()
+			{
+			    if( mc.blurX < 20)
+				{
+				    gf.blurX++;
+				    gf.blurY++;
+			    }
+				else
+				{
+				    delete this.onEnterFrame;
+			    }
+			    this.filters = [gf];
+			};
     };
-}
+*/
+/*
+    kText.onRollOut = function() {
+
+    this.onEnterFrame = function() {
+
+    this.filters = [gf];
+    if (gf.blurX > 3) {
+
+    gf.blurX--;
+    gf.blurY--;
+
+    } else {
+
+    delete this.onEnterFrame;
+
+    }
+
+    };
+
+    };
+*/
+
 
 /*
 

@@ -52,6 +52,98 @@
 	{
 		this.mc.clear();
 		
+		//
+		// Grid lines
+		//var item_width:Number = box.width / this.grid_count;
+		//var left:Number = box.left+(item_width/2);
+		//
+
+		for( var i:Number=0; i < this.grid_count; i+=this.x_steps )
+		{
+			if( ( this.alt_axis_step > 1 ) && ( i % this.alt_axis_step == 0 ) )
+			{
+				this.mc.lineStyle(1,this.alt_axis_colour,100);
+			}
+			else
+			{
+				this.mc.lineStyle(1,this.grid_colour,100);
+			}
+			
+			var x:Number = box.get_x_pos(i);
+			this.mc.moveTo( x, box.bottom);
+			this.mc.lineTo( x, box.top);
+			
+			this.mc.moveTo( x, box.bottom);
+			this.mc.lineTo( x, box.top);
+		}
+		
+		// for 3D
+		var h:Number = 5;
+		var offset:Number = 12;
+		var x_axis_height:Number = h+offset;
+		var three_d:Boolean = true;
+		
+		//
+		// ticks
+		var item_width:Number = box.width / this.grid_count;
+		//var left:Number = box.left+(item_width/2);
+		
+		if( three_d )
+		{
+			box.tick_offset = offset;
+		}
+		//
+	
+
+		this.mc.lineStyle(1, this.axis_colour, 100);
+		var w:Number = 1;
+		for( var i:Number=0; i < this.grid_count; i+=this.x_steps )
+		{
+			//
+			// uncommenting beginFill and endFill causes big bugs??!
+			//
+			//this.mc.beginFill(this.axis_colour,100);
+			var pos:Number = box.get_x_tick_pos(i);
+			
+			this.mc.moveTo( pos, box.bottom+x_axis_height);
+			this.mc.lineTo( pos+w, box.bottom+x_axis_height);
+			this.mc.lineTo( pos+w, box.bottom+x_axis_height+this.tick);
+			this.mc.lineTo( pos, box.bottom+x_axis_height+this.tick);
+			this.mc.lineTo( pos, box.bottom+x_axis_height);
+			//this.mc.endFill();
+		}
+
+		// Axis line:
+		//this.mc.lineStyle(undefined, 0, 0);
+		this.mc.beginFill(this.axis_colour,100);
+		this.mc.moveTo(box.left,box.bottom);
+		this.mc.lineTo(box.right,box.bottom);
+		this.mc.lineTo(box.right-offset,box.bottom+offset);
+		this.mc.lineTo(box.left-offset,box.bottom+offset);
+		this.mc.endFill();
+	
+		//this.mc.beginFill(this.axis_colour,100);
+		this.mc.beginFill(0xFF0000,100);
+		this.mc.moveTo(box.left-offset,box.bottom+offset);
+		this.mc.lineTo(box.right-offset,box.bottom+offset);
+		this.mc.lineTo(box.right-offset,box.bottom+offset+h);
+		this.mc.lineTo(box.left-offset,box.bottom+offset+h);
+		this.mc.endFill();
+		
+		this.mc.beginFill(0xFF00F0,100);
+		this.mc.moveTo(box.right,box.bottom);
+		this.mc.lineTo(box.right,box.bottom+h);
+		this.mc.lineTo(box.right-offset,box.bottom+offset+h);
+		this.mc.lineTo(box.right-offset,box.bottom+offset);
+		this.mc.endFill();
+		
+	}
+	
+	// 2D:
+	function move_( box:Box )
+	{
+		this.mc.clear();
+		
 		//var width = (box.right-box.left);
 		
 		//
@@ -101,9 +193,14 @@
 			
 	}
 	
-	function height()
+	function height_()
 	{
 		return 2 + this.tick;
+	}
+	
+	function height()
+	{
+		return 24 + this.tick;
 	}
 	
 }

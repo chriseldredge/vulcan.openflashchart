@@ -11,6 +11,11 @@
 	public var zero:Number=0;
 	public var steps:Number=0;
 	
+	// set by 3D axis
+	public var tick_offset:Number=0;
+	
+	public var count:Number = 0;
+	
 	public function Box( top:Number, left:Number, right:Number, bottom:Number,
 						y_min:Number, y_max:Number,
 						x_left_label_width:Number, x_right_label_width:Number,
@@ -36,6 +41,8 @@
 		
 		this.steps = this.height/(y_max-y_min);
 		this.zero = bottom-(steps*(y_min*-1));
+		
+		this.count = count;
 	}
 	
 	//
@@ -117,5 +124,29 @@
 		//y -= i*this.steps;
 		y -= i*steps;
 		return y;
+	}
+	
+	function width_():Number
+	{
+		return this.right-this.left_();
+	}
+	
+	function left_():Number
+	{
+		var padding_left:Number = 40;
+		return this.left+padding_left;
+	}
+	
+	function get_x_pos( i:Number )
+	{
+		var item_width:Number = this. width_() / this.count;
+		return this.left_()+(item_width/2)+(i*item_width);
+	}
+	
+	function get_x_tick_pos( i:Number )
+	{
+		var item_width:Number = (this.right-this.left_()) / this.count;
+		
+		return this.get_x_pos(i) - this.tick_offset;
 	}
 }
