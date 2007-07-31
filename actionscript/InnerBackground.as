@@ -14,6 +14,8 @@
 		
 		this.colour = _root.get_colour( vals[0] );
 		
+		trace( this.colour)
+		
 		if( vals.length > 1 )
 			this.colour_2 = _root.get_colour( vals[1] ); 
 			

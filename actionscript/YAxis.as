@@ -28,14 +28,11 @@
 			else
 				this.axis_colour = 0x784016;
 		}else{
-			if( lv.y_axis_colour != undefined )
+			if( lv.y2_axis_colour != undefined )
 				this.axis_colour = _root.get_colour( lv.y2_axis_colour );
 			else
 				this.axis_colour = 0x784016;
 		}
-
-		
-
 	
 		//this.count = count;
 		this.min = min;
@@ -43,7 +40,7 @@
 		this.steps = steps;
 		
 		if(nr == 1) 
-		this.mc = _root.createEmptyMovieClip( "y_axis", _root.getNextHighestDepth() );
+			this.mc = _root.createEmptyMovieClip( "y_axis", _root.getNextHighestDepth() );
 	    else if(nr==2) 
 			this.mc = _root.createEmptyMovieClip( "y_axis2", _root.getNextHighestDepth() );
 	
@@ -56,7 +53,7 @@
 		{
 			if( !_root.lv.show_y2 )
 				return;
-				
+			
 			// Create the new axel
 			this.mc.clear();
 			this.mc.lineStyle(this.line_width,this.axis_colour,100);

@@ -3,7 +3,7 @@
 &y_label_size=15&
 &y_ticks=5,10,4&
 
-&bar_glass=60,#D54C78,#C31812,Page views,10&
+&bar_arrow=50,#D54C78,Page views,10&
 &values=9,6,7,9,5,7,6,9,9&
 
 &x_labels=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep&

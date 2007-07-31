@@ -3,10 +3,10 @@
 	private var font_size:String;
 	private var text_decoration:String;
 	private var margin:String;
-	private var margin_top:Number;
-	private var margin_bottom:Number;
-	private var margin_left:Number;
-	private var margin_right:Number;
+	public var margin_top:Number;
+	public var margin_bottom:Number;
+	public var margin_left:Number;
+	public var margin_right:Number;
 	
 	private var padding:String;
 	public var padding_top:Number=0;
@@ -52,10 +52,6 @@
 	}
 	
 	private function getAttribute( txt:String ) {
-		
-//		if (this.stop_process == 1) return;
-		
-//		var p:Number = txt.lastIndexOf( attribute + ':' );
 		var arr:Array = txt.split(":");
 		if( arr.length==2 )
 		{
@@ -222,26 +218,10 @@
 		// Splitting by the ;
 		var arr:Array = txt.split(";");
 		
-		trace(arr);
-		
 		// Checking all the types of css params we accept and writing to internal variables of the object class
-		for (var i = 0; i < arr.length; i++) {
-//			this.stop_process = 0;  // Flag of processed
-//			if ( arr[i] == '' ) continue;
+		for( var i = 0; i < arr.length; i++)
+		{
 			getAttribute(arr[i]);
-//			getAttribute('font-size', arr[i]);
-//			getAttribute('text-decoration', arr[i]);
-//			getAttribute('margin', arr[i]);
-//			getAttribute('margin-top', arr[i]);
-//			getAttribute('margin-bottom', arr[i]);
-//			getAttribute('margin-left', arr[i]);
-//			getAttribute('margin-right', arr[i]);
-//			getAttribute('font-weight', arr[i]);
-//			getAttribute('font-family', arr[i]);
-//			getAttribute('color', arr[i]);
 		}
-						
-		// if the user assigns a complex margin we need to strip it
-		//stripMargin();
 	}
 }

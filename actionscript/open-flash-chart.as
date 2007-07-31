@@ -327,7 +327,7 @@ function make_chart()
 	var xSteps = 1;
 	if( this.x_axis_steps != undefined )
 		xStep = Number( this.x_axis_steps );
-	
+
 	_root._x_axis = new XAxis(
 		xTicks,									// <-- tick size
 		this,
@@ -346,7 +346,8 @@ function make_chart()
 		this
 		);
 
-	if(_root.lv.show_y2) {
+	if(_root.lv.show_y2)
+	{
 		_root._y_axis_labels2 = new YAxisLabels(
 			y_label_style2,
 			_root._min_max.y2_min,
@@ -357,7 +358,6 @@ function make_chart()
 			);
 	}
 
-	
 	_root._y_axis = new YAxis(
 		_root._y_ticks,
 		this,
@@ -367,7 +367,8 @@ function make_chart()
 		1
 		);
 
-	if(_root.lv.show_y2) {
+	if(_root.lv.show_y2)
+	{
 		_root._y_axis2 = new YAxis(
 			_root._y_ticks,
 			this,
@@ -377,7 +378,7 @@ function make_chart()
 			2
 			);
 	}
-	
+
 	// The chart values are defined last and are on TOP of every thing else
 	_root.chartValues = new Values( this, _root._background.colour, _root._x_axis_labels.labels );
 	
@@ -403,7 +404,8 @@ function LoadVarsOnLoad( success )
 	if( !success )
 	{
 		_root.loading.done();
-		_root.oops('Open Flash Chart: Error opening data file URL');
+		//_root.oops('Open Flash Chart: Error opening data file URL\n'+_root.data);
+		_root.oops(_root.data);
 		return;
 	}
 
@@ -466,7 +468,7 @@ function move()
 	
 	if(_root.lv.show_y2)
 	{
-		right -= _root._y2_legend.width()+_root._y_axis_labels2.width()+_root._y_axis2.width()+4;
+		right -= _root._y2_legend.width()+_root._y_axis_labels2.width()+_root._y_axis2.width();
 		// no need to shrink the box:
 		jiggle = false;
 	}
@@ -505,6 +507,8 @@ function move()
 	if(_root.lv.show_y2)
 		_root._y_axis_labels2.move( Stage.width-(_root._y2_legend.width()+_root._y_axis_labels2.width()), b );
 
+	_root._x_axis.move( b );
+	
 	// move x labels
 	_root._x_axis_labels.move(
 		Stage.height-(_root._x_legend.height()+_root._x_axis_labels.height()),	// <-- up from the bottom
@@ -515,8 +519,6 @@ function move()
 	
 	if(_root.lv.show_y2)	
 		_root._y_axis2.move( b , 2 );
-	
-	_root._x_axis.move( b );
 	
 	_root.chartValues.move(
 		b,
@@ -658,7 +660,8 @@ setContextualMenu();
 
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-18.txt";
+	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-22.txt";
+	//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 	
 lv.load(_root.data);
 

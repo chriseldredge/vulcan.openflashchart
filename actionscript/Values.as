@@ -39,8 +39,14 @@
 			return new BarStyle(lv['bar'+name],'bar_'+c);
 		else if( lv['filled_bar'+name] != undefined )
 			return new FilledBarStyle(lv['filled_bar'+name],'bar_'+c);
-		else if( lv['glass_bar'+name] != undefined )
-			return new BarGlassStyle(lv['glass_bar'+name],'bar_'+c);
+		else if( lv['bar_glass'+name] != undefined )
+			return new BarGlassStyle(lv['bar_glass'+name],'bar_'+c);
+		else if( lv['bar_fade'+name] != undefined )
+			return new BarFade(lv['bar_fade'+name],'bar_'+c);
+		else if( lv['bar_arrow'+name] != undefined )
+			return new BarArrow(lv['bar_arrow'+name],'bar_'+c);
+		else if( lv['bar_3d'+name] != undefined )
+			return new Bar3D(lv['bar_3d'+name],'bar_'+c);
 		else if( lv['pie'+name] != undefined )
 			return new PieStyle(lv['pie'+name], lv.x_labels!=undefined ? lv['values'] : "", lv['links']);
 	}
@@ -79,67 +85,75 @@
 	}
 	
 	// If the current line is to be drawn on y2 (defined in data values, y2_lines)
-	private function gety2line(line) {
-			var y2lines:Array = _root.lv.y2_lines.split(",");
-			var y2:Boolean = false;
+	private function is_right( y2lines:Array, line:Number )
+	{
+			//var y2lines:Array = _root.lv.y2_lines.split(",");
+			var right:Boolean = false;
 			for( var i:Number=0; i<y2lines.length; i++ )
 			{
-				if(y2lines[i] == line) y2 = true; 
+				if(y2lines[i] == line)
+					right = true; 
 			}
 			
-			return y2;
+			return right;
+	}
+	
+	function _do_it()
+	{
+		
 	}
 	
 	// get x, y co-ords of vals
 	function move( b:Box, min:Number, max:Number, min2:Number, max2:Number )
 	{
 		// If we have a second y-axel
-		if (_root.lv.show_y2 && _root.lv.y2_lines) {
+		if( 1==0 )//_root.lv.show_y2 && _root.lv.y2_lines)
+		{
 			var y2lines:Array = _root.lv.y2_lines.split(",");
 			
-
+			var bar_count:Number = this._count_bars();
+			var bar:Number = 0;
 			
 			for( var c:Number=0; c<this.styles.length; c++ )
 			{				
 				// If the current axel is to be drawn on y2 (defined in data values, y2_lines)
-				if(gety2line(c+1)) {
-
+				if( is_right(c+1) )
+				{
 					// move values.. 
 					var tickY:Number = b.height / (max2-min2);
-					var bar_count:Number = this._count_bars();
-					var bar:Number = 0;
+				}
+				else
+				{
+					var tickY:Number = b.height / (max-min);
+				}
+					
 					
 						this.styles[c].valPos( b, tickY, min2, bar_count, bar );
 						if( this.styles[c].is_bar )
 							bar++;
-				}else{
-					// move values.. 
-					var tickY:Number = b.height / (max-min);
-
-					var bar_count:Number = this._count_bars();
-					var bar:Number = 0;
-
-						this.styles[c].valPos( b, tickY, min, bar_count, bar );
-						if( this.styles[c].is_bar )
-							bar++;
-					} // else..	
-				}
 			
 				// draw the bars and dots ontop of the line
 				for( var c:Number=0; c < this.styles.length; c++ )
 				{
 					this.styles[c].draw();
 				}
+			}
 			
-		}else{
+		}
+		else
+		{
 		
-			// move values.. 
-			var tickY:Number = b.height / (max-min);
 			var bar_count:Number = this._count_bars();
 			var bar:Number = 0;
 			
 			for( var c:Number=0; c<this.styles.length; c++ )
 			{
+				// move values...
+				if( _root.lv.show_y2 && _root.lv.y2_lines && is_right(c+1) )
+					var tickY:Number = b.height / (max2-min2);
+				else
+					var tickY:Number = b.height / (max-min);
+				
 				this.styles[c].valPos( b, tickY, min, bar_count, bar );
 				if( this.styles[c].is_bar )
 					bar++;
