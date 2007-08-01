@@ -16,7 +16,7 @@
 	public function parse_bar( val:String )
 	{
 		var vals:Array = val.split(",");
-		trace(vals);
+	
 		this.alpha = Number( vals[0] );
 		this.colour = _root.get_colour(vals[1]);
 		

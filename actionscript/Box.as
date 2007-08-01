@@ -133,7 +133,7 @@
 	
 	function left_():Number
 	{
-		var padding_left:Number = 40;
+		var padding_left:Number = this.tick_offset;
 		return this.left+padding_left;
 	}
 	

@@ -5,27 +5,9 @@
 
 	public function Bar3D( val:String, name:String )
 	{
-		this.name = name;
-		this.parse( val );
+		super( val, name );
 	}
 	
-	public function parse( val:String )
-	{
-		var vals:Array = val.split(",");
-		
-		this.alpha = Number( vals[0] );
-		this.colour = _root.get_colour( vals[1] );
-		//this.outline_colour = _root.get_colour( vals[2] );
-		
-		if( vals.length > 3 )
-			this.key = vals[2];
-			
-		if( vals.length > 4 )
-			this.font_size = Number( vals[2] );
-		
-	}
-	
-
 	private function top( mc:MovieClip, val:ExPoint )
 	{
 		//
@@ -35,10 +17,13 @@
 //		mc.lineStyle(0, this.outline_colour, 100);
 		mc.lineStyle(0, this.outline_colour, 0);
 		//set gradient fill
-		var colors:Array = [this.colour,0xFFFFFF];
+		
+		var lighter:Number = ChartUtil.Lighten( this.colour );
+		
+		var colors:Array = [this.colour,lighter];
 		var alphas:Array = [100,100];
 		var ratios:Array = [0,255];
-		var matrix:Object = { matrixType:"box", x:0, y:0, w:w+12, h:12, r:0};//(180/180)*Math.PI };
+		var matrix:Object = { matrixType:"box", x:0, y:0, w:w+12, h:12, r:(270/180)*Math.PI };
 		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
 		
 		
@@ -61,11 +46,16 @@
 		var y:Number = val.y;
 		var rad:Number = 7;
 		
-		//set gradient fill
-		var colors:Array = [0xFFFFFF,this.colour];
+		var lighter:Number = ChartUtil.Lighten( this.colour );
+
+		// Darken a light color
+		//var darker:Number = this.colour;
+		//darker &= 0x7F7F7F;
+
+		var colors:Array = [lighter,this.colour];
 		var alphas:Array = [100,100];
 		var ratios:Array = [0,127];
-		var matrix:Object = { matrixType:"box", x:-12, y:12, w:w-12, h:h+12, r:(180/360)*Math.PI };
+		var matrix:Object = { matrixType:"box", x:-12, y:12, w:w-12, h:h+12, r:(90/180)*Math.PI };
 		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
 		
 		mc.moveTo(-12, 12);
@@ -84,8 +74,16 @@
 		var y:Number = val.y;
 		var rad:Number = 7;
 		
+		var lighter:Number = ChartUtil.Lighten( this.colour );
+		
+		var colors:Array = [this.colour,lighter];
+		var alphas:Array = [100,100];
+		var ratios:Array = [0,255];
+		var matrix:Object = { matrixType:"box", x:w-12, y:0, w:w, h:h+12, r:(270/180)*Math.PI };
+		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
+		
 		mc.lineStyle(0, this.outline_colour, 0);
-		mc.beginFill(this.colour, 100);
+		//mc.beginFill(this.colour, 100);
 		mc.moveTo(w, 0);
 		mc.lineTo(w, h);
 		mc.lineTo(w-12, h+12);
