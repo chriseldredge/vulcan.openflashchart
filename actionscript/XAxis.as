@@ -9,6 +9,8 @@
 	private var x_steps:Number;
 	private var alt_axis_colour:Number;
 	private var alt_axis_step:Number;
+	private var three_d:Boolean;
+	private var three_d_height:Number;
 	
 	function XAxis( tick:Number, lv:LoadVars, label_count:Number, steps:Number )
 	{
@@ -23,6 +25,14 @@
 			this.axis_colour = _root.get_colour( lv.x_axis_colour );
 		else
 			this.axis_colour = 0x784016;
+			
+		if( lv.x_axis_3d != undefined )
+		{
+			this.three_d = true;
+			this.three_d_height = int( lv.x_axis_3d );
+		}
+		else
+			this.three_d = false;
 
 		// Path from Will Henry
 		var style:Array = lv.x_label_style.split(',');
@@ -77,24 +87,28 @@
 			this.mc.lineTo( x, box.top);
 		}
 		
+		if( this.three_d )
+			this.three_d_axis( mc, box );
+		else
+			this.two_d_axis( mc, box );
+	}
+		
+	function three_d_axis( mc:MovieClip, box:Box )
+	{
+		
 		// for 3D
-		var h:Number = 5;
+		var h:Number = this.three_d_height;
 		var offset:Number = 12;
 		var x_axis_height:Number = h+offset;
-		var three_d:Boolean = true;
 		
 		//
 		// ticks
 		var item_width:Number = box.width / this.grid_count;
-		//var left:Number = box.left+(item_width/2);
-		
-		if( three_d )
-		{
-			box.tick_offset = offset;
-		}
+		// tell the box object that the 
+		// X axis labels need to be offset
+		box.tick_offset = offset;
 		//
 	
-
 		this.mc.lineStyle(1, this.axis_colour, 100);
 		var w:Number = 1;
 		for( var i:Number=0; i < this.grid_count; i+=this.x_steps )
@@ -113,24 +127,42 @@
 			//this.mc.endFill();
 		}
 
-		// Axis line:
-		//this.mc.lineStyle(undefined, 0, 0);
-		this.mc.beginFill(this.axis_colour,100);
+		
+		// turn off out lines:
+		mc.lineStyle(0, 0, 0);
+		
+		var lighter:Number = ChartUtil.Lighten( this.axis_colour );
+		
+		// TOP
+		var colors:Array = [this.axis_colour,lighter];
+		var alphas:Array = [100,100];
+		var ratios:Array = [0,255];
+		var matrix:Object = { matrixType:"box", x:box.left-offset, y:box.bottom, w:box.width_(), h:offset, r:(270/180)*Math.PI };
+		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
 		this.mc.moveTo(box.left,box.bottom);
 		this.mc.lineTo(box.right,box.bottom);
 		this.mc.lineTo(box.right-offset,box.bottom+offset);
 		this.mc.lineTo(box.left-offset,box.bottom+offset);
 		this.mc.endFill();
 	
-		//this.mc.beginFill(this.axis_colour,100);
-		this.mc.beginFill(0xFF0000,100);
+		// front
+		var colors:Array = [this.axis_colour,lighter];
+		var alphas:Array = [100,100];
+		var ratios:Array = [0,255];
+		var matrix:Object = { matrixType:"box", x:box.left-offset, y:box.bottom+offset, w:box.width_(), h:h, r:(270/180)*Math.PI };
+		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
 		this.mc.moveTo(box.left-offset,box.bottom+offset);
 		this.mc.lineTo(box.right-offset,box.bottom+offset);
 		this.mc.lineTo(box.right-offset,box.bottom+offset+h);
 		this.mc.lineTo(box.left-offset,box.bottom+offset+h);
 		this.mc.endFill();
 		
-		this.mc.beginFill(0xFF00F0,100);
+		// right side
+		var colors:Array = [this.axis_colour,lighter];
+		var alphas:Array = [100,100];
+		var ratios:Array = [0,255];
+		var matrix:Object = { matrixType:"box", x:box.left-offset, y:box.bottom+offset, w:box.width_(), h:h, r:(225/180)*Math.PI };
+		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
 		this.mc.moveTo(box.right,box.bottom);
 		this.mc.lineTo(box.right,box.bottom+h);
 		this.mc.lineTo(box.right-offset,box.bottom+offset+h);
@@ -140,40 +172,8 @@
 	}
 	
 	// 2D:
-	function move_( box:Box )
+	function two_d_axis( mc:MovieClip, box:Box )
 	{
-		this.mc.clear();
-		
-		//var width = (box.right-box.left);
-		
-		//
-		// Grid lines
-		var item_width:Number = box.width / this.grid_count;
-		var left:Number = box.left+(item_width/2);
-		//
-//
-// JG removed for merge
-//
-//		this.mc.lineStyle(1,this.grid_colour,100);
-//
-		for( var i:Number=0; i < this.grid_count; i+=this.x_steps )
-		{
-			if( ( this.alt_axis_step > 1 ) && ( i % this.alt_axis_step == 0 ) )
-			{
-				this.mc.lineStyle(1,this.alt_axis_colour,100);
-			}
-			else
-			{
-				this.mc.lineStyle(1,this.grid_colour,100);
-			}
-			
-			this.mc.moveTo(left + (i*item_width),box.bottom);
-			this.mc.lineTo(left + (i*item_width),box.top);
-			
-			this.mc.moveTo(left + (i*item_width),box.bottom);
-			this.mc.lineTo(left + (i*item_width),box.top);
-		}
-		
 		//
 		// ticks
 		var item_width:Number = box.width / this.grid_count;
@@ -200,7 +200,14 @@
 	
 	function height()
 	{
-		return 24 + this.tick;
+		if( this.three_d )
+		{
+			// 12 is the size of the slanty
+			// 3D part of the X axis
+			return this.three_d_height+12+this.tick;
+		}
+		else
+			return this.tick;
 	}
 	
 }

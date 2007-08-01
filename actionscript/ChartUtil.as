@@ -67,6 +67,33 @@ static function get_colour( col:String ) :Number
 		};
 	
 	}
+	
+	//
+	// JG: lighten a colour by splitting it
+	//     into RGB, then adding a bit to each
+	//     value...
+	//
+	static function Lighten( col:Number ) : Number
+	{
+		var rgb = col; //decimal value for a purple color
+		var red = (rgb & 16711680) >> 16; //extacts the red channel
+		var green = (rgb & 65280) >> 8; //extacts the green channel
+		var blue = rgb & 255; //extacts the blue channel
+		var p=2;
+		red += red/p;
+		if( red > 255 )
+			red = 255;
+			
+		green += green/p;
+		if( green > 255 )
+			green = 255;
+			
+		blue += blue/p;
+		if( blue > 255 )
+			blue = 255;
+			
+		return red << 16 | green << 8 | blue;
+	}
 
 /*
     //import flash.filters.GlowFilter;

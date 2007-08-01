@@ -3,25 +3,31 @@
 &y_label_size=15&
 &y_ticks=5,10,4&
 
-&bar_3d=40,#D54C78,Page views,10&
-&bar_3d_2=40,#D50000,Stuff,10&
+&bar_3d=60,#D54C78,Page views,10&
+&bar_3d_2=60,#3334AD,Stuff,10&
 &bar_3=50,#339966,Green Bar,10&
+&line_dot_4=3,#CC3399,Line,10,5&
 
 &values=9,6,7,9,5,7,6,9,9&
-&values_2=6,7,9,5,7,6,9,9,4&
-&values_3=7,9,5,7,6,9,9,4,1&
+&values_2=6,7,-9,5,7,6,9,9,4&
+&values_3=7,9,5,7,6,-9,9,-4,1&
+&values_4=17,19,15,17,16,19,19,14,11&
 
 &x_labels=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep&
 
 &bg_colour=#E2E6E0&
-&x_axis_colour=#818D9D&
+&x_axis_colour=#909090&
+
+&x_axis_3d=15&
+
 &x_grid_colour=#ADB5C7&
 &y_axis_colour=#818D9D&
 &y_grid_colour=#ADB5C7&
 
 &x_ticks=20&
 
-&y_max=12&
+&y_max=20&
+&y_min=-20&
 
 &show_y2=true&
 &y2_axis_colour=#164166&
