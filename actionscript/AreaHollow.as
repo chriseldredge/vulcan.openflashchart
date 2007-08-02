@@ -34,11 +34,11 @@
 		this.mc = _root.createEmptyMovieClip( name, _root.getNextHighestDepth());
 	}
 	
-	public function valPos( b:Box, tickY:Number, min:Number )
+	public function valPos( b:Box, right_axis:Boolean, min:Number )
 	{
 		// we need this to draw the area:
-		this.bottom = b.zero;
-		super.valPos( b, tickY, min );
+		this.bottom = b.getY( 0, right_axis );
+		super.valPos( b, right_axis, min );
 	}
 	
 	public function draw()

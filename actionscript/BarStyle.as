@@ -55,7 +55,7 @@
 	}
 	
 
-	public function valPos( b:Box, tickY:Number, min:Number, bar_count:Number, bar:Number )
+	public function valPos( b:Box, right_axis:Boolean, min:Number, bar_count:Number, bar:Number )
 	{
 		this.ExPoints=Array();
 		
@@ -78,11 +78,9 @@
 				new ExPoint(
 					left2,					// x position of value
 					0,						// center (not applicable for a bar)
-					b.getY( values[i] ),
+					b.getY( Number(this.values[i]), right_axis ),
 					bar_width,
-					// min=-100 and max=100, use b.zero
-					// min = 10 and max = 20, use b.bottom
-					Math.min(b.zero,b.bottom),
+					b.getYbottom( right_axis ),
 					Number(values[i])
 					)
 				);

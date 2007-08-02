@@ -8,16 +8,18 @@
 	public var height:Number=0;
 	
 	// position of the zero line
-	public var zero:Number=0;
-	public var steps:Number=0;
+	//public var zero:Number=0;
+	//public var steps:Number=0;
 	
 	// set by 3D axis
 	public var tick_offset:Number=0;
 	
 	public var count:Number = 0;
 	
+	private var minmax:MinMax;
+	
 	public function Box( top:Number, left:Number, right:Number, bottom:Number,
-						y_min:Number, y_max:Number,
+						minmax:MinMax,
 						x_left_label_width:Number, x_right_label_width:Number,
 						count:Number, jiggle:Boolean )
 	{
@@ -39,10 +41,11 @@
 		this.width = this.right-this.left;
 		this.height = bottom-top;
 		
-		this.steps = this.height/(y_max-y_min);
-		this.zero = bottom-(steps*(y_min*-1));
+		//this.steps = this.height/(minmax.y_max-minmax.y_min);
+		//this.zero = bottom-(steps*(minmax.y_min*-1));
 		
 		this.count = count;
+		this.minmax = minmax;
 	}
 	
 	//
@@ -104,24 +107,26 @@
 		
 	}
 	
-	
-	// takes a value and returns the screen Y location
-	function getY( i:Number )
+	//
+	// the bottom point of a bar:
+	//   min=-100 and max=100, use b.zero
+	//   min = 10 and max = 20, use b.bottom
+	//
+	function getYbottom( right_axis:Boolean )
 	{
-		// start at zero:
-		var y:Number = this.zero;
-		// move up (-Y) to our point (don't forget that y_min will shift it down)
-		y -= i*this.steps;
-		return y;
+		var min:Number = this.minmax.min( right_axis );
+		return this.getY( Math.max(0,min), right_axis );
 	}
 	
 	// takes a value and returns the screen Y location
-	function getY2( i:Number, steps )
+	function getY( i:Number, right_axis:Boolean )
 	{
-		// start at zero:
-		var y:Number = this.zero;
+		var steps:Number = this.height/(this.minmax.range( right_axis ));
+		
+		// find Y pos for value=zero
+		var y:Number = this.bottom-(steps*(this.minmax.min( right_axis )*-1));
+		
 		// move up (-Y) to our point (don't forget that y_min will shift it down)
-		//y -= i*this.steps;
 		y -= i*steps;
 		return y;
 	}
@@ -133,19 +138,19 @@
 	
 	function left_():Number
 	{
-		var padding_left:Number = this.tick_offset;
+		var padding_left:Number = 0;//this.tick_offset;
 		return this.left+padding_left;
 	}
 	
 	function get_x_pos( i:Number )
 	{
-		var item_width:Number = this. width_() / this.count;
+		var item_width:Number = this.width_() / this.count;
 		return this.left_()+(item_width/2)+(i*item_width);
 	}
 	
 	function get_x_tick_pos( i:Number )
 	{
-		var item_width:Number = (this.right-this.left_()) / this.count;
+		//var item_width:Number = (this.right-this.left_()) / this.count;
 		
 		return this.get_x_pos(i) - this.tick_offset;
 	}
