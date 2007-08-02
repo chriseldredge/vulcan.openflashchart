@@ -145,16 +145,26 @@
 		
 			var bar_count:Number = this._count_bars();
 			var bar:Number = 0;
+			var y2:Boolean = false;
+			var y2lines:Array;
+			
+			if( _root.lv.show_y2 != undefined )
+				if( _root.lv.show_y2 != 'false' )
+					if( _root.lv.y2_lines != undefined )
+					{
+						y2 = true;
+						y2lines = _root.lv.y2_lines.split(",");
+					}
 			
 			for( var c:Number=0; c<this.styles.length; c++ )
 			{
-				// move values...
-				if( _root.lv.show_y2 && _root.lv.y2_lines && is_right(c+1) )
-					var tickY:Number = b.height / (max2-min2);
-				else
-					var tickY:Number = b.height / (max-min);
+				var right_axis:Boolean = false;
 				
-				this.styles[c].valPos( b, tickY, min, bar_count, bar );
+				// move values...
+				if( y2 && is_right(y2lines,c+1) )
+					right_axis = true;
+
+				this.styles[c].valPos( b, right_axis, min, bar_count, bar );
 				if( this.styles[c].is_bar )
 					bar++;
 			}

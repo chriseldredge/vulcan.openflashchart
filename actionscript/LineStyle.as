@@ -22,16 +22,12 @@
 			
 	}
 	
-	public function valPos( b:Box, tickY:Number, min:Number )
+	public function valPos( b:Box, right_axis:Boolean, min:Number )
 	{
 		this.ExPoints=Array();
 		
-		var item_width:Number = b.width_() / values.length;
-		var point:Number = b.left_()+(item_width/2);
-		
 		for( var i:Number=0; i < this.values.length; i++)
 		{
-			var center:Number = point+(i*item_width);			// <- center the dot in X
 			
 			if( this.values[i] == 'null' )
 			{
@@ -41,11 +37,11 @@
 			{
 				this.ExPoints.push(
 					new ExPoint(
-						b.left,													// x position of value
-						center,
-						b.getY2( Number(this.values[i]), tickY),
+						0,													// x position of value
+						b.get_x_pos( i ),
+						b.getY( Number(this.values[i]), right_axis ),
 						0,//bar_width,
-						b.bottom,
+						0,//b.bottom,
 						Number( this.values[i] )
 						)
 					);
@@ -63,6 +59,7 @@
 		
 		for( var i:Number=0; i < this.ExPoints.length; i++ )
 		{
+			// skip null values
 			if( this.ExPoints[i] != null )
 			{
 				if( first )

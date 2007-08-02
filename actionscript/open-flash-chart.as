@@ -477,11 +477,10 @@ function move()
  	
 	var b:Box = new Box(
 		top, left, right, bottom,
-		_root._min_max.y_min,
-		_root._min_max.y_max,					// <-- scale everything between min/max
+		_root._min_max,					// <-- scale everything between min/max
 		_root._x_axis_labels.first_label_width(),
 		_root._x_axis_labels.last_label_width(),
-		_root.chartValues.styles[0].values.length,
+		 _root.chartValues.length(),
 		jiggle
 		);
 		
