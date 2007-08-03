@@ -64,10 +64,7 @@
 		
 		//
 		// Grid lines
-		//var item_width:Number = box.width / this.grid_count;
-		//var left:Number = box.left+(item_width/2);
 		//
-
 		for( var i:Number=0; i < this.grid_count; i+=this.x_steps )
 		{
 			if( ( this.alt_axis_step > 1 ) && ( i % this.alt_axis_step == 0 ) )
@@ -104,10 +101,6 @@
 		//
 		// ticks
 		var item_width:Number = box.width / this.grid_count;
-		// tell the box object that the 
-		// X axis labels need to be offset
-		box.tick_offset = offset;
-		//
 	
 		this.mc.lineStyle(1, this.axis_colour, 100);
 		var w:Number = 1;

@@ -21,7 +21,7 @@
 	public function Box( top:Number, left:Number, right:Number, bottom:Number,
 						minmax:MinMax,
 						x_left_label_width:Number, x_right_label_width:Number,
-						count:Number, jiggle:Boolean )
+						count:Number, jiggle:Boolean, three_d:Boolean )
 	{
 		
 		var tmp_left:Number = left;
@@ -46,6 +46,13 @@
 		
 		this.count = count;
 		this.minmax = minmax;
+		
+		if( three_d )
+		{
+			// tell the box object that the 
+			// X axis labels need to be offset
+			this.tick_offset = 12;
+		}
 	}
 	
 	//
@@ -138,7 +145,7 @@
 	
 	function left_():Number
 	{
-		var padding_left:Number = 0;//this.tick_offset;
+		var padding_left:Number = this.tick_offset;
 		return this.left+padding_left;
 	}
 	
