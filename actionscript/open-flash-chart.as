@@ -481,7 +481,8 @@ function move()
 		_root._x_axis_labels.first_label_width(),
 		_root._x_axis_labels.last_label_width(),
 		 _root.chartValues.length(),
-		jiggle
+		jiggle,
+		_root._x_axis.three_d
 		);
 		
 
