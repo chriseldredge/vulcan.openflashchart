@@ -9,7 +9,7 @@ class graph
          $this->y_max = 20;
          $this->y_steps = 5;
          $this->title = '';
-         $this->title_size = 30;
+         $this->title_style = '';
          
          $this->x_tick_size = -1;
 
@@ -24,11 +24,7 @@ class graph
 
 
          // AXIS LABEL styles:         
-         $this->x_label_style_size = -1;
-         $this->x_label_style_colour = '#000000';
-         $this->x_label_style_orientation = 0;
-         $this->x_label_style_step = 1;
-
+         $this->x_label_style = '';
          $this->y_label_style = '';
          
 
@@ -78,18 +74,24 @@ class graph
         $this->x_labels = $a;
     }
     
-    function set_x_label_style( $size, $colour='', $orientation=0, $step=-1 )
+    function set_x_label_style( $size, $colour='', $orientation=0, $step=-1, $grid_colour='' )
     {
-        $this->x_label_style_size = $size;
-
+        
+        $this->x_label_style = '&x_label_style='. $size;
+        
         if( strlen( $colour ) > 0 )
-                $this->x_label_style_colour = $colour;
+            $this->x_label_style .= ','. $colour;
 
-        if( $orientation > 0 )
-                $this->x_label_style_orientation = $orientation;
+        if( $orientation > -1 )
+            $this->x_label_style .= ','. $orientation;
 
         if( $step > 0 )
-                $this->x_label_style_step = $step;
+            $this->x_label_style .= ','. $step;
+        
+        if( strlen( $grid_colour ) > 0 )
+            $this->x_label_style .= ','. $grid_colour;
+            
+        $this->x_label_style .= "&\r\n";
     }
 
     function set_bg_colour( $colour )
@@ -148,13 +150,11 @@ class graph
          $this->y_steps = intval( $val );
     }
     
-    function title( $title, $size=-1, $colour='' )
+    function title( $title, $style='' )
     {
         $this->title = $title;
-        if( $size > 0 )
-                $this->title_size = $size;
-        if( strlen( $colour ) > 0 )
-                $this->title_colour = $colour;
+        if( strlen( $style ) > 0 )
+                $this->title_style = $style;
     }
     
     function set_x_legend( $text, $size=-1, $colour='' )
@@ -323,7 +323,7 @@ class graph
 
     function pie_slice_colours( $colours )
     {
-         $this->pie_colours = implode(',',$colours);
+        $this->pie_colours = implode(',',$colours);
     }
 
     
@@ -336,8 +336,7 @@ class graph
         if( strlen( $this->title ) > 0 )
         {
                 $tmp .= '&title='. $this->title .',';
-                $tmp .= $this->title_size .',';
-                $tmp .= $this->title_colour .'&';
+                $tmp .= $this->title_style .'&';
                 $tmp .= "\r\n";
         }
         
@@ -347,16 +346,10 @@ class graph
                 $tmp .= $this->x_legend_size .',';
                 $tmp .= $this->x_legend_colour ."&\r\n";
         }
-        
-        if( $this->x_label_style_size > 0 )
-        {
-                $tmp .= '&x_label_style='. $this->x_label_style_size;
-                $tmp .= ','.$this->x_label_style_colour;
-		$tmp .= ','.$this->x_label_style_orientation;
-                $tmp .= ','.$this->x_label_style_step;
-                $tmp .= "&\r\n";
-        }
-        
+
+        if( strlen( $this->x_label_style ) > 0 )
+            $tmp .= $this->x_label_style;
+            
         if( $this->x_tick_size > 0 )
                 $tmp .= "&x_ticks=". $this->x_tick_size ."&\r\n";
 
