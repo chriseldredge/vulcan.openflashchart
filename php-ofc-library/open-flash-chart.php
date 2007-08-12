@@ -3,57 +3,65 @@ class graph
 {
     function graph()
     {
-         $this->data = array();
-         $this->x_labels = array();
-         $this->y_min = 0;
-         $this->y_max = 20;
-         $this->y_steps = 5;
-         $this->title = '';
-         $this->title_style = '';
-         
-         $this->x_tick_size = -1;
+		$this->data = array();
+		$this->x_labels = array();
+		$this->y_min = 0;
+		$this->y_max = 20;
+		$this->y_steps = 5;
+		$this->title = '';
+		$this->title_style = '';
 
+		$this->x_tick_size = -1;
 
-         // GRID styles:
-         $this->x_axis_colour = '';
-         $this->x_grid_colour = '';
+		$this->y2_max = '';
+		$this->y2_min = '';
+		
+		// GRID styles:
+		$this->x_axis_colour = '';
+		$this->x_axis_3d = '';
+		$this->x_grid_colour = '';
+		$this->x_axis_steps = 1;
+		$this->y_axis_colour = '';
+		$this->y_grid_colour = '';
+		$this->y2_axis_colour = '';
+    
+		// AXIS LABEL styles:         
+		$this->x_label_style = '';
+		$this->y_label_style = '';
+		$this->y_label_style_right = '';
+		
 
-         $this->y_axis_colour = '';
-         $this->y_grid_colour = '';
-         $this->x_axis_steps = 1;
+		// AXIS LEGEND styles:
+		$this->x_legend = '';
+		$this->x_legend_size = 20;
+		$this->x_legend_colour = '#000000';
 
+		$this->y_legend = '';
+		$this->y_legend_right = '';
+		//$this->y_legend_size = 20;
+		//$this->y_legend_colour = '#000000';
 
-         // AXIS LABEL styles:         
-         $this->x_label_style = '';
-         $this->y_label_style = '';
-         
+		$this->lines = array();
+		$this->line_default = '&line=3,#87421F&'. "\r\n";
 
-         // AXIS LEGEND styles:
-         $this->x_legend = '';
-         $this->x_legend_size = 20;
-         $this->x_legend_colour = '#000000';
+		$this->bg_colour = '';
+		$this->bg_image = '';
 
-         $this->y_legend = '';
-         $this->y_legend_size = 20;
-         $this->y_legend_colour = '#000000';
-         
-         $this->lines = array();
-         $this->line_default = '&line=3,#87421F&'. "\r\n";
-         
-         $this->bg_colour = '';
-         $this->bg_image = '';
+		$this->inner_bg_colour = '';
+		$this->inner_bg_colour_2 = '';
+		$this->inner_bg_angle = '';
 
-         $this->inner_bg_colour = '';
-         $this->inner_bg_colour_2 = '';
-         $this->inner_bg_angle = '';
+		// PIE chart ------------
+		$this->pie = '';
+		$this->pie_values = '';
+		$this->pie_colours = '';
+		$this->pie_labels = '';
 
-         // PIE chart ------------
-         $this->pie = '';
-         $this->pie_values = '';
-         $this->pie_colours = '';
-         $this->pie_labels = '';
-
-         $this->tool_tip = '';
+		$this->tool_tip = '';
+		
+		// which data lines are attached to the
+		// right Y axis?
+		$this->y2_lines = array();
     }
 
     function set_data( $a )
@@ -106,7 +114,11 @@ class graph
         $this->bg_image_y = $y;
     }
 
-
+	function attach_to_y_right_axis( $data_number )
+	{
+		$this->y2_lines[] = $data_number;
+	}
+    
     function set_inner_background( $col, $col2='', $angle=-1 )
     {
 
@@ -121,16 +133,24 @@ class graph
 
     }
 
+    function _set_y_label_style( $name, $size, $colour )
+    {
+    	$tmp = '&'. $name .'='. $size;
+    	
+    	if( strlen( $colour ) > 0 )
+                $tmp .= ','. $colour;
+    	
+    	return $tmp;
+	}
+	
     function set_y_label_style( $size, $colour='' )
     {
-        $this->y_lable_style = "&y_label_style=". $size;
-
-
-        if( strlen( $colour ) > 0 )
-                $this->y_lable_style .= ','. $colour;
-
-        $this->y_lable_style .= "&\r\n";;
-
+        $this->y_lable_style = $this->_set_y_label_style( 'y_label_style', $size, $colour );
+    }
+    
+    function set_y_right_label_style( $size, $colour='' )
+    {
+        $this->y_label_style_right = $this->_set_y_label_style( 'y2_label_style', $size, $colour );
     }
     
     function set_y_max( $max )
@@ -144,7 +164,17 @@ class graph
 
         $this->y_min = intval( $min );
     }
+        
+    function set_y_right_max( $max )
+    {
+    	$this->y2_max = '&y2_max='. $max .'&'."\r\n";
+	}
     
+    function set_y_right_min( $min )
+    {
+    	$this->y2_min = '&y2_min='. $min .'&'."\r\n";
+	}
+	
     function y_label_steps( $val )
     {
          $this->y_steps = intval( $val );
@@ -178,16 +208,38 @@ class graph
         if ( $steps > 0 )
             $this->x_axis_steps = $steps;
     }
-
     
-    function set_y_legend( $text, $size=-1, $colour='' )
+    function set_x_axis_3d( $size )
     {
-         $this->y_legend = $text;
+    	if( $size > 0 )
+    		$this->x_axis_3d = '&x_axis_3d='. $size ."&\r\n";
+	}
+	
+	// PRIVATE METHOD
+	function _set_y_legend( $label, $text, $size, $colour )
+	{
+		$tmp = '&'. $label .'=';
+		$tmp .= $text;
+    	
          if( $size > -1 )
-                $this->y_legend_size = $size;
+         	$tmp .= ','. $size;
 
          if( strlen( $colour )>0 )
-                $this->y_legend_colour = $colour;
+         	$tmp .= ','. $colour;
+                
+         $tmp .= "&\r\n";
+         
+         return $tmp;
+	}
+
+    function set_y_legend( $text, $size=-1, $colour='' )
+    {
+    	$this->y_legend = $this->_set_y_legend( 'y_legend', $text, $size, $colour );
+    }
+    
+    function set_y_right_legend( $text, $size=-1, $colour='' )
+    {
+    	$this->y_legend_right = $this->_set_y_legend( 'y2_legend', $text, $size, $colour );
     }
     
     function line( $width, $colour='', $text='', $size=-1, $circles=-1 )
@@ -252,7 +304,7 @@ class graph
         $this->lines[] = $tmp;
     }
 
-    function area_hollow( $width, $dot_size, $colour, $alpha, $text='', $font_size='' )
+    function area_hollow( $width, $dot_size, $colour, $alpha, $text='', $font_size='', $fill_colour='' )
     {
     	$tmp = '&area_hollow';
     	
@@ -263,6 +315,9 @@ class graph
 
         if( strlen( $text ) > 0 )
             $tmp .= ",$text,$font_size";
+            
+        if( strlen( $fill_colour ) > 0 )
+        	$tmp .= ','. $fill_colour;
 
         $tmp .= "&\r\n";
         
@@ -295,18 +350,68 @@ class graph
         
         $this->lines[] = $tmp;
     }
+    
+    function bar_3D( $alpha, $colour='', $text='', $size=-1 )
+    {
+    	$tmp = '&bar_3d';
+    	
+    	if( count( $this->lines ) > 0 )
+        	$tmp .= '_'. (count( $this->lines )+1);
+        	
+    	$tmp .= '=';
+        $tmp .= $alpha .','. $colour .','. $text .','. $size;
+        $tmp .= "&\r\n";;
+        
+        $this->lines[] = $tmp;
+    }
+    
+	function bar_glass( $alpha, $colour, $outline_colour, $text='', $size=-1 )
+	{
+		$tmp = '&bar_glass';
 
+		if( count( $this->lines ) > 0 )
+			$tmp .= '_'. (count( $this->lines )+1);
+
+		$tmp .= '=';
+		$tmp .= $alpha .','. $colour .','. $outline_colour .','. $text .','. $size;
+		$tmp .= "&\r\n";;
+
+		$this->lines[] = $tmp;
+	}
+	
+	function bar_fade( $alpha, $colour='', $text='', $size=-1 )
+	{
+		$tmp = '&bar_fade';
+
+		if( count( $this->lines ) > 0 )
+			$tmp .= '_'. (count( $this->lines )+1);
+
+		$tmp .= '=';
+		$tmp .= $alpha .','. $colour .','. $text .','. $size;
+		$tmp .= "&\r\n";;
+
+		$this->lines[] = $tmp;
+	}
+    
     function x_axis_colour( $axis, $grid='' )
     {
-         $this->x_axis_colour = $axis;
-         $this->x_grid_colour = $grid;
-    }
-
+		$this->x_axis_colour = $axis;
+		$this->x_grid_colour = $grid;
+	}
+		
     function y_axis_colour( $axis, $grid='' )
     {
-         $this->y_axis_colour = $axis;
-         $this->y_grid_colour = $grid;
+    	$this->y_axis_colour = '&y_axis_colour='. $axis .'&'."\r\n";
+		
+		if( strlen( $grid ) > 0 )
+			$this->y_grid_colour = '&y_grid_colour='. $grid .'&'."\r\n";
     }
+    
+    function y_right_axis_colour( $colour )
+    {
+         $this->y2_axis_colour = '&y2_axis_colour='. $colour .'&'."\r\n";
+    }
+    
 
     function pie( $alpha, $line_colour, $label_colour )
     {
@@ -331,7 +436,6 @@ class graph
     function render()
     {
         //$tmp = "&padding=70,5,50,40&\r\n";
-        $tmp = '';
         
         if( strlen( $this->title ) > 0 )
         {
@@ -352,23 +456,18 @@ class graph
             
         if( $this->x_tick_size > 0 )
                 $tmp .= "&x_ticks=". $this->x_tick_size ."&\r\n";
-
+                
         if( $this->x_axis_steps > 0 )
-                $tmp .= "&x_axis_steps=". $this->x_axis_steps ."&\r\n";
+        	$tmp .= "&x_axis_steps=". $this->x_axis_steps ."&\r\n";
 
-
+		if( strlen( $this->x_axis_3d ) > 0 )
+			$tmp .= $this->x_axis_3d;
         
-        if( strlen( $this->y_legend ) > 0 )
-        {
-                $tmp .= '&y_legend='. $this->y_legend .',';
-                $tmp .= $this->y_legend_size .',';
-                $tmp .= $this->y_legend_colour ."&\r\n";
-        }
+        $tmp .= $this->y_legend;	
+        $tmp .= $this->y_legend_right;
 
-        if( strlen( $this->y_label_style ) > 0 )
-        {
-            $tmp .= $this->y_label_style;
-        }
+        if( strlen( $this->y_lable_style ) > 0 )
+            $tmp .= $this->y_lable_style;
 
         $tmp .= '&y_ticks=5,10,'. $this->y_steps .'&'."\r\n";
         
@@ -384,12 +483,26 @@ class graph
 
         foreach( $this->data as $data )
 				$tmp .= $data;
+		
+		if( count( $this->y2_lines ) > 0 )
+		{
+			$tmp .= '&y2_lines=';
+			$tmp .= implode( ',', $this->y2_lines );
+			$tmp .= '&'."\r\n";
+			//
+			// Should this be an option? I think so...
+			//
+			$tmp .= '&show_y2=true&'."\r\n";
+		}	
         
         if( count( $this->x_labels ) > 0 )
                 $tmp .= '&x_labels='.implode(',',$this->x_labels).'&'."\r\n";
                 
         $tmp .= '&y_min='. $this->y_min .'&'."\r\n";
         $tmp .= '&y_max='. $this->y_max .'&'."\r\n";
+        
+        $tmp .= $this->y2_max;
+		$tmp .= $this->y2_min;
         
         if( strlen( $this->bg_colour ) > 0 )
         	$tmp .= '&bg_colour='. $this->bg_colour .'&'."\r\n";
@@ -409,10 +522,13 @@ class graph
         }
 
         if( strlen( $this->y_axis_colour ) > 0 )
-        {
-            $tmp .= '&y_axis_colour='. $this->y_axis_colour .'&'."\r\n";
-            $tmp .= '&y_grid_colour='. $this->y_grid_colour .'&'."\r\n";
-        }
+        	$tmp .= $this->y_axis_colour;
+		
+		if( strlen( $this->y_grid_colour ) > 0 )
+			$tmp .= $this->y_grid_colour;
+			
+		if( strlen( $this->y2_axis_colour ) > 0 )    
+			$tmp .= $this->y2_axis_colour;
 
         if( strlen( $this->inner_bg_colour ) > 0 )
         {
