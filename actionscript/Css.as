@@ -137,7 +137,28 @@
 				this.padding_left	= ToNumber(arr[0]);
 				break;
 				
-			// do the rest later...
+			// margin: 15px 5px;
+			case 2:
+				this.padding_top	= ToNumber(arr[0]);
+				this.padding_right	= ToNumber(arr[1]);
+				this.padding_bottom= ToNumber(arr[0]);
+				this.padding_left	= ToNumber(arr[1]);
+				break;
+				
+			// margin: 15px 5px 10px;
+			case 3:
+				this.padding_top	= ToNumber(arr[0]);
+				this.padding_right	= ToNumber(arr[1]);
+				this.padding_bottom= ToNumber(arr[2]);
+				this.padding_left	= ToNumber(arr[1]);
+				break;
+				
+			// margin: 1px 2px 3px 4px;
+			default:
+				this.padding_top	= ToNumber(arr[0]);
+				this.padding_right	= ToNumber(arr[1]);
+				this.padding_bottom= ToNumber(arr[2]);
+				this.padding_left	= ToNumber(arr[3]);
 		}
 	}
 	

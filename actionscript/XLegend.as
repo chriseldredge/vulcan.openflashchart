@@ -44,6 +44,11 @@
 		this.mc.autoSize = "left";
 	}
 	
+	function get_legend()
+	{
+		return this.title;
+	}
+	
 	function move()
 	{
 		// this will center it in the X

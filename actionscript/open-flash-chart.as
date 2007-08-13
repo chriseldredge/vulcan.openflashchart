@@ -104,12 +104,13 @@ function FadeIn()
 	this.onEnterFrame = function ()
     {
 		//if( _root.tooltip == undefined )
+		//var tooltip = {x_label:tool_tip, value:this.val.tooltip, this.tool_tip_title};
+		
 		_root.show_tip(
 			this,
 			this.val.left,
 			((this.val.bar_bottom<this.val.y)?this.val.bar_bottom:this.val.y)-20,
-			this.tool_tip_title,
-			this.val.tooltip
+			this.tooltip
 			);
 			
         if( this._alpha < 100 )
@@ -149,7 +150,7 @@ function hide_tip( owner:Object )
 		removeMovieClip("tooltip");
 }
 
-function show_tip( owner:Object, x:Number, y:Number, tip_title:String, tip_text:String )
+function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 {
 	if( ( _root.tooltip != undefined ) )
 	{
@@ -158,7 +159,30 @@ function show_tip( owner:Object, x:Number, y:Number, tip_title:String, tip_text:
 		else
 			removeMovieClip("tooltip");	// <-- it is someone elses tootlip - remove it
 	}
+	
+	var tmp:String;
+	var lines:Array = [];
+	//
+	// Dirty hack. Takes a tool_tip_wrapper, and replaces the #val# with the
+	// tool_tip text, so noew you can do: "My Val = $#val#%", which turns into:
+	// "My Val = $12.00%"
+	//
+	if( _root.tool_tip_wrapper != undefined )
+	{
+		tmp = _root.tool_tip_wrapper.replace('#val#',tip_obj.value);
+		tmp = tmp.replace('#key#',tip_obj.key);
+		tmp = tmp.replace('#x_label#',tip_obj.x_label);
 		
+		if( _root._x_legend != undefined )
+			tmp = tmp.replace('#x_legend#',_root._x_legend.get_legend());
+			
+		//tmp = tmp.replace('<br>','\n');
+	}
+	else
+		tmp = tip_obj.x_label+'<br>'+tip_obj.value;
+		
+	lines = tmp.split( '<br>' );
+	
 	var tooltip = _root.createEmptyMovieClip( "tooltip", this.getNextHighestDepth() );
 		
 	// let the tooltip know who owns it, else we get weird race conditions where one
@@ -169,39 +193,34 @@ function show_tip( owner:Object, x:Number, y:Number, tip_title:String, tip_text:
 	var ccolor = {color:0xf0f0f0, alpha:100};
 
 	tooltip.createTextField( "txt_title", tooltip.getNextHighestDepth(), 5, 5, 100, 100);
-	tooltip.txt_title.text = tip_title;
+	tooltip.txt_title.text = lines.shift();
 
 	
-	var fmt:TextFormat = new TextFormat();
-	fmt.color = 0x0000F0;
-	fmt.font = "Verdana";
-	
-	// this needs to be an option:
-	fmt.bold = true;
-	fmt.size = 12;
-	fmt.align = "right";
-	tooltip.txt_title.setTextFormat(fmt);
-	tooltip.txt_title.autoSize="left";
-	
-	tooltip.createTextField( "txt", tooltip.getNextHighestDepth(), 5, tooltip.txt_title._height, 100, 100);
-	
-	//
-	// Dirty hack. Takes a tool_tip_wrapper, and replaces the #val# with the
-	// tool_tip text, so noew you can do: "My Val = $#val#%", which turns into:
-	// "My Val = $12.00%"
-	//
-	if( _root.tool_tip_wrapper != undefined )
-		tooltip.txt.text = _root.tool_tip_wrapper.replace('#val#',tip_text);
-	else
-		tooltip.txt.text = tip_text;
+	if( length( lines ) > 0 )
+	{
+		var fmt:TextFormat = new TextFormat();
+		fmt.color = 0x0000F0;
+		fmt.font = "Verdana";
 		
-	var fmt2:TextFormat = new TextFormat();
-	fmt2.color = 0x000000;
-	fmt2.font = "Verdana";
-	fmt2.size = 12;
-	fmt2.align = "right";
-	tooltip.txt.setTextFormat(fmt2);
-	tooltip.txt.autoSize="left";
+		// this needs to be an option:
+		fmt.bold = true;
+		fmt.size = 12;
+		fmt.align = "right";
+		tooltip.txt_title.setTextFormat(fmt);
+		tooltip.txt_title.autoSize="left";
+		
+		tooltip.createTextField( "txt", tooltip.getNextHighestDepth(), 5, tooltip.txt_title._height, 100, 100);
+		
+		tooltip.txt.text = lines.join( '\n' );
+		
+		var fmt2:TextFormat = new TextFormat();
+		fmt2.color = 0x000000;
+		fmt2.font = "Verdana";
+		fmt2.size = 12;
+		fmt2.align = "left";
+		tooltip.txt.setTextFormat(fmt2);
+		tooltip.txt.autoSize="left";
+	}
 	
 	var max_width:Number = Math.max( tooltip.txt_title._width, tooltip.txt._width );
 	var y_pos:Number = y - tooltip.txt_title._height - tooltip.txt._height;
@@ -660,7 +679,7 @@ setContextualMenu();
 
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-14.txt";
+	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-22.txt";
 	//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 	
 lv.load(_root.data);

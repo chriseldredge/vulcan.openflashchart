@@ -47,7 +47,9 @@
 			
 			// this is used in FadeIn and FadeOut
 			mc.tool_tip_title = labels[i];
-			
+			var tooltip:Object = {x_label:labels[i], value:this.values[i], key:this.key};
+			mc.tooltip = tooltip;
+		
 			// add the MovieClip to our array:
 			this.bar_mcs[i] = mc;
 		}
