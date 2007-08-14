@@ -4,7 +4,7 @@
 &y_ticks=5,10,4&
 
 &bar_fade=60,#D54C78,Page views,10&
-&values=9,6,7,9,5,7,6,9,9&
+&values=9,6,7,-9,5,7,6,9,9&
 
 &x_labels=Jan,Feb,Mar,Apr,May,Jun,Jul,Aug,Sep&
 
@@ -14,4 +14,5 @@
 &y_axis_colour=#818D9D&
 &y_grid_colour=#ADB5C7&
 
+&y_min=-12&
 &y_max=12&

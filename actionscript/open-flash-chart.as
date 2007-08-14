@@ -103,16 +103,14 @@ function FadeIn()
 {
 	this.onEnterFrame = function ()
     {
-		//if( _root.tooltip == undefined )
-		//var tooltip = {x_label:tool_tip, value:this.val.tooltip, this.tool_tip_title};
-		
+
 		_root.show_tip(
 			this,
-			this.val.left,
-			((this.val.bar_bottom<this.val.y)?this.val.bar_bottom:this.val.y)-20,
+			this._x,
+			this._y-20,
 			this.tooltip
 			);
-			
+		
         if( this._alpha < 100 )
         {
             this._alpha += 10;
@@ -175,11 +173,14 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 		
 		if( _root._x_legend != undefined )
 			tmp = tmp.replace('#x_legend#',_root._x_legend.get_legend());
-			
-		//tmp = tmp.replace('<br>','\n');
 	}
 	else
-		tmp = tip_obj.x_label+'<br>'+tip_obj.value;
+	{
+		if( tip_obj.x_label == undefined )
+			tmp = tip_obj.value;
+		else
+			tmp = tip_obj.x_label+'<br>'+tip_obj.value;
+	}
 		
 	lines = tmp.split( '<br>' );
 	
@@ -188,40 +189,33 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 	// let the tooltip know who owns it, else we get weird race conditions where one
 	// bar has onRollOver fired, then another has onRollOut and deletes the tooltip
 	tooltip._owner = owner;
-		
-	var cstroke = {width:2, color:0x808080, alpha:100};
-	var ccolor = {color:0xf0f0f0, alpha:100};
 
 	tooltip.createTextField( "txt_title", tooltip.getNextHighestDepth(), 5, 5, 100, 100);
 	tooltip.txt_title.text = lines.shift();
 
+	var fmt:TextFormat = new TextFormat();
+	fmt.color = 0x0000F0;
+	fmt.font = "Verdana";
 	
-	if( length( lines ) > 0 )
-	{
-		var fmt:TextFormat = new TextFormat();
-		fmt.color = 0x0000F0;
-		fmt.font = "Verdana";
-		
-		// this needs to be an option:
-		fmt.bold = true;
-		fmt.size = 12;
-		fmt.align = "right";
-		tooltip.txt_title.setTextFormat(fmt);
-		tooltip.txt_title.autoSize="left";
-		
-		tooltip.createTextField( "txt", tooltip.getNextHighestDepth(), 5, tooltip.txt_title._height, 100, 100);
-		
-		tooltip.txt.text = lines.join( '\n' );
-		
-		var fmt2:TextFormat = new TextFormat();
-		fmt2.color = 0x000000;
-		fmt2.font = "Verdana";
-		fmt2.size = 12;
-		fmt2.align = "left";
-		tooltip.txt.setTextFormat(fmt2);
-		tooltip.txt.autoSize="left";
-	}
+	// this needs to be an option:
+	fmt.bold = true;
+	fmt.size = 12;
+	fmt.align = "right";
+	tooltip.txt_title.setTextFormat(fmt);
+	tooltip.txt_title.autoSize="left";
 	
+	tooltip.createTextField( "txt", tooltip.getNextHighestDepth(), 5, tooltip.txt_title._height, 100, 100);
+	
+	tooltip.txt.text = lines.join( '\n' );
+	
+	var fmt2:TextFormat = new TextFormat();
+	fmt2.color = 0x000000;
+	fmt2.font = "Verdana";
+	fmt2.size = 12;
+	fmt2.align = "left";
+	tooltip.txt.setTextFormat(fmt2);
+	tooltip.txt.autoSize="left";
+
 	var max_width:Number = Math.max( tooltip.txt_title._width, tooltip.txt._width );
 	var y_pos:Number = y - tooltip.txt_title._height - tooltip.txt._height;
 	
@@ -230,6 +224,9 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 		// the tooltip has drifted off the top of the screen, move it down:
 		y_pos = y + tooltip.txt_title._height + tooltip.txt._height;
 	}
+	
+	var cstroke = {width:2, color:0x808080, alpha:100};
+	var ccolor = {color:0xf0f0f0, alpha:100};
 
 	tooltip.rrectangle(
 		max_width+10,
@@ -679,7 +676,7 @@ setContextualMenu();
 
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-22.txt";
+	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-23.txt";
 	//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 	
 lv.load(_root.data);
