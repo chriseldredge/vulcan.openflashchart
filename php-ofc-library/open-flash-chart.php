@@ -436,6 +436,7 @@ class graph
     function render()
     {
         //$tmp = "&padding=70,5,50,40&\r\n";
+        $tmp = '';
         
         if( strlen( $this->title ) > 0 )
         {
