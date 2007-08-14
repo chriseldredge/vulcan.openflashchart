@@ -145,7 +145,7 @@ class graph
 	
     function set_y_label_style( $size, $colour='' )
     {
-        $this->y_lable_style = $this->_set_y_label_style( 'y_label_style', $size, $colour );
+        $this->y_label_style = $this->_set_y_label_style( 'y_label_style', $size, $colour );
     }
     
     function set_y_right_label_style( $size, $colour='' )
@@ -466,8 +466,8 @@ class graph
         $tmp .= $this->y_legend;	
         $tmp .= $this->y_legend_right;
 
-        if( strlen( $this->y_lable_style ) > 0 )
-            $tmp .= $this->y_lable_style;
+        if( strlen( $this->y_label_style ) > 0 )
+            $tmp .= $this->y_label_style;
 
         $tmp .= '&y_ticks=5,10,'. $this->y_steps .'&'."\r\n";
         
