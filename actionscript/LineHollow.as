@@ -42,7 +42,8 @@
 			if( val != 'null' )
 			{
 				var mc:MovieClip = _root.createEmptyMovieClip(this.name+'_dot_'+this.mcs.length, _root.getNextHighestDepth());
-				this.make_dot( mc, this.bgColour, this.colour, tool_tip, _root.format( val ) );
+				var tooltip = {x_label:tool_tip, value:_root.format(val), key:this.key};
+				this.make_dot( mc, this.bgColour, this.colour, tooltip );
 				this.mcs.push(mc);
 			}
 			else

@@ -46,7 +46,7 @@
 			//mc.onRollOver = ChartUtil.glowIn;
 			
 			// this is used in FadeIn and FadeOut
-			mc.tool_tip_title = labels[i];
+			//mc.tool_tip_title = labels[i];
 			var tooltip:Object = {x_label:labels[i], value:this.values[i], key:this.key};
 			mc.tooltip = tooltip;
 		
@@ -97,22 +97,39 @@
 	
 	public function draw_bar( val:ExPoint, i:Number )
 	{
+		var top:Number;
+		var height:Number;
+		
+		if(val.bar_bottom<val.y)
+		{
+			top = val.bar_bottom;
+			height = val.y-val.bar_bottom;
+		}
+		else
+		{
+			top = val.y
+			height = val.bar_bottom-val.y;
+		}
+		
 		var mc:MovieClip = this.bar_mcs[i];
 		
 		mc.clear();
 		mc.beginFill( this.colour, 100 );
-    	mc.moveTo( val.left, val.y );
-    	mc.lineTo( val.left+val.bar_width, val.y );
-    	mc.lineTo( val.left+val.bar_width, val.bar_bottom );
-    	mc.lineTo( val.left, val.bar_bottom );
-		mc.lineTo( val.left, val.y );
+    	mc.moveTo( 0, 0 );
+    	mc.lineTo( val.bar_width, 0 );
+    	mc.lineTo( val.bar_width, height );
+    	mc.lineTo( 0, height );
+		mc.lineTo( 0, 0 );
     	mc.endFill();
+		
+		mc._x = val.left;
+		mc._y = top;
 	
 		mc._alpha = this.alpha;
 		mc._alpha_original = this.alpha;	// <-- remember our original alpha while tweening
 		
 		// this is used in _root.FadeIn and _root.FadeOut
-		mc.val = val;
+		//mc.val = val;
 		
 		// we return this MovieClip to FilledBarStyle
 		return mc;

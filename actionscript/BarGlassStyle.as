@@ -101,6 +101,6 @@
 		mc._alpha_original = this.alpha;	// <-- remember our original alpha while tweening
 		
 		// this is used in _root.FadeIn and _root.FadeOut
-		mc.val = val;
+		//mc.val = val;
 	}
 }
