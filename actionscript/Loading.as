@@ -24,7 +24,8 @@
 		var cstroke = {width:2, color:0x808080, alpha:100};
 		var ccolor = {color:0xf0f0f0, alpha:100};
 		
-		mc.rrectangle(
+		ChartUtil.rrectangle(
+			mc,
 			mc.txt._width+10,
 			mc.txt._height+10,
 			6,

@@ -25,7 +25,7 @@
 		
 		if( this.mc == undefined )
 		{
-			this.mc = _root.createEmptyMovieClip( "oops", _root.getNextHighestDepth() );
+			this.mc = _root.createEmptyMovieClip( "title", _root.getNextHighestDepth() );
 			this.mc.txt = this.mc.createTextField( 'title', _root.getNextHighestDepth(), 0, 0, 200, 200 );
 		}
 			

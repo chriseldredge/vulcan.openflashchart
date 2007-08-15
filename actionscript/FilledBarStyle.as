@@ -29,11 +29,26 @@
 	{
 		var mc:MovieClip = super.draw_bar( val, i );
 		
+		var top:Number;
+		var height:Number;
+		
+		if(val.bar_bottom<val.y)
+		{
+			top = val.bar_bottom;
+			height = val.y-val.bar_bottom;
+		}
+		else
+		{
+			top = val.y
+			height = val.bar_bottom-val.y;
+		}
+		
 		mc.lineStyle(2,this.outline_colour,100);
-		mc.moveTo( val.left, val.bar_bottom );
-    	mc.lineTo( val.left, val.y );
-    	mc.lineTo( val.left+val.bar_width, val.y );
-    	mc.lineTo( val.left+val.bar_width, val.bar_bottom );
+		mc.moveTo( 0, 0 );
+    	mc.lineTo( val.bar_width, 0 );
+    	mc.lineTo( val.bar_width, height );
+    	mc.lineTo( 0, height );
+		mc.lineTo( 0, 0 );
 
 		mc._alpha = this.alpha;
 		mc._alpha_original = this.alpha;	// <-- remember our original alpha while tweening

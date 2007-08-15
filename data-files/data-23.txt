@@ -7,11 +7,13 @@
 &bar_fade_2=60,#3334AD,Stuff,10&
 &bar_3=50,#339966,Green Bar,10&
 &bar_glass_4=50,#339966,Green Bar,10&
+&filled_bar_5=50,#9933CC,#8010A0,Page views,10&
 
 &values=10,-6&
 &values_2=10,-10&
 &values_3=7,-7&
 &values_4=10,-10&
+&values_5=8,-8&
 
 &x_labels=Jan,Feb&
 

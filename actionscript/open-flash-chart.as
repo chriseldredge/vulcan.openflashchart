@@ -1,6 +1,6 @@
 ﻿
 // rectangle with rounded corners
-#include "rrectangle.as"
+//#include "rrectangle.as"
 #include "prototype.drawCircle.as"
 #include "prototype.fillCircle.as"
 #include "String.prototype.replace.as"
@@ -191,7 +191,8 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 	tooltip._owner = owner;
 
 	tooltip.createTextField( "txt_title", tooltip.getNextHighestDepth(), 5, 5, 100, 100);
-	tooltip.txt_title.text = lines.shift();
+	if( lines.length > 1 )
+		tooltip.txt_title.text = lines.shift();
 
 	var fmt:TextFormat = new TextFormat();
 	fmt.color = 0x0000F0;
@@ -228,7 +229,8 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 	var cstroke = {width:2, color:0x808080, alpha:100};
 	var ccolor = {color:0xf0f0f0, alpha:100};
 
-	tooltip.rrectangle(
+	ChartUtil.rrectangle(
+		tooltip,
 		max_width+10,
 		tooltip.txt_title._height + tooltip.txt._height + 5,
 		6,
@@ -236,7 +238,7 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 		y_pos,
 		cstroke,
 		ccolor);
-	
+
 	// NetVicious, June, 2007
 	// create shadow filter
 	var dropShadow = new flash.filters.DropShadowFilter();
@@ -281,7 +283,8 @@ function oops( text:String )
 	var cstroke = {width:2, color:0x808080, alpha:100};
 	var ccolor = {color:0xf0f0f0, alpha:100};
 	
-	mc.rrectangle(
+	ChartUtil.rrectangle(
+		mc,
 		mc.txt._width+10,
 		mc.txt._height+10,
 		6,
@@ -676,7 +679,7 @@ setContextualMenu();
 
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-23.txt";
+	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-11.txt";
 	//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 	
 lv.load(_root.data);
