@@ -11,4 +11,4 @@
 
 &pie_labels=January,Feb,March,April,May,June,July,August,Sept&
 
-&tool_tip=Value: #val#%25&
+&tool_tip=#x_label#<br>Value: #val#%25&

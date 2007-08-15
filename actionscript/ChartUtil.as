@@ -3,21 +3,21 @@
  */
 class ChartUtil {
 
-static function get_colour( col:String ) :Number
-{
-	if( col.substr(0,2) == '0x' )
-		return Number(col);
-		
-	if( col.substr(0,1) == '#' )
-		return Number( '0x'+col.substr(1,col.length) );
-		
-	if( col.length=6 )
-		return Number( '0x'+col );
-		
-	// not recognised as a valid colour, so?
-	return Number( col );
-		
-}
+	static function get_colour( col:String ) :Number
+	{
+		if( col.substr(0,2) == '0x' )
+			return Number(col);
+			
+		if( col.substr(0,1) == '#' )
+			return Number( '0x'+col.substr(1,col.length) );
+			
+		if( col.length=6 )
+			return Number( '0x'+col );
+			
+		// not recognised as a valid colour, so?
+		return Number( col );
+			
+	}
 	
 	
 	static function FadeIn(mc :MovieClip, tooltip_follow:Boolean) : Void
@@ -27,8 +27,7 @@ static function get_colour( col:String ) :Number
 				mc,
 				mc.val.left,
 				((mc.val.bar_bottom<mc.val.y)?mc.val.bar_bottom:mc.val.y)-20,
-				mc.tool_tip_title,
-				mc.tool_tip_value
+				mc.tooltip
 				);
 			
 			if(tooltip_follow) {
@@ -95,6 +94,44 @@ static function get_colour( col:String ) :Number
 		return red << 16 | green << 8 | blue;
 	}
 
+	// JG - I copied this from :
+	//   http://www.actionscript.org/showMovie.php?id=1183
+	//
+	// Rounded rectangle made only with actionscript.
+	// Code taken and modified from http://www.actionscript-toolbox.com
+	// w = rectangle width
+	// h = rectangle height
+	// rad = rounded corner radius
+	// x = x  start point for rectangle
+	// y = y  start point for rectangle
+	// 
+	// 
+	// If you have any questions about this script mail me: janiss@cc.lv
+	// 
+	static function rrectangle( mc:MovieClip, w:Number, h:Number, rad:Number, x:Number, y:Number, stroke:Object, fill:Object) : Void {
+		// added by JG on 30th May 07
+		x = Math.round(x);
+		y = Math.round(y);
+		w = Math.round(w);
+		h = Math.round(h);
+		//
+		mc.lineStyle(stroke.width, stroke.color, stroke.alpha);
+		mc.beginFill(fill.color, fill.alpha);
+		mc.moveTo(0+rad, 0);
+		mc.lineTo(w-rad, 0);
+		mc.curveTo(w, 0, w, rad);
+		mc.lineTo(w, h-rad);
+		mc.curveTo(w, h, w-rad, h);
+		mc.lineTo(0+rad, h);
+		mc.curveTo(0, h, 0, h-rad);
+		mc.lineTo(0, 0+rad);
+		mc.curveTo(0, 0, 0+rad, 0);
+		mc.endFill();
+		mc._x = x;
+		mc._y = y;
+	}
+
+	
 /*
     //import flash.filters.GlowFilter;
 	static function GlowIn(mc :MovieClip, tooltip_follow:Boolean) : Void
@@ -201,42 +238,6 @@ static function show_tip( owner:Object, x:Number, y:Number, tip_text:String ) : 
 
 }
 
-// JG - I copied this from :
-//   http://www.actionscript.org/showMovie.php?id=1183
-//
-// Rounded rectangle made only with actionscript.
-// Code taken and modified from http://www.actionscript-toolbox.com
-// w = rectangle width
-// h = rectangle height
-// rad = rounded corner radius
-// x = x  start point for rectangle
-// y = y  start point for rectangle
-// 
-// 
-// If you have any questions about this script mail me: janiss@cc.lv
-// 
-static function rrectangle(tooltip:MovieClip, w:Number, h:Number, rad:Number, x:Number, y:Number, stroke:Object, fill:Object) : Void {
-	// added by JG on 30th May 07
-	x = Math.round(x);
-	y = Math.round(y);
-	w = Math.round(w);
-	h = Math.round(h);
-	//
-	tooltip.lineStyle(stroke.width, stroke.color, stroke.alpha);
-	tooltip.beginFill(fill.color, fill.alpha);
-	tooltip.moveTo(0+rad, 0);
-	tooltip.lineTo(w-rad, 0);
-	tooltip.curveTo(w, 0, w, rad);
-	tooltip.lineTo(w, h-rad);
-	tooltip.curveTo(w, h, w-rad, h);
-	tooltip.lineTo(0+rad, h);
-	tooltip.curveTo(0, h, 0, h-rad);
-	tooltip.lineTo(0, 0+rad);
-	tooltip.curveTo(0, 0, 0+rad, 0);
-	tooltip.endFill();
-	tooltip._x = x;
-	tooltip._y = y;
-}
 
 static function format( i:Number ) : String {
 	var s:String = '';

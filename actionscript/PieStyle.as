@@ -91,11 +91,13 @@ class PieStyle extends Style
 			
 			if(this.links.length>i)
 			{
-				mc.onRelease = function ():Void { getURL(this.links[i]); };
+				mc._ofc_link = this.links[i];
+				mc.onRelease = function ():Void { trace(this._ofc_link); getURL(this._ofc_link); };
 			}
 			
 			// this is used in FadeIn and FadeOut
-			//mc.tool_tip_title = labels[i];
+			var tooltip:Object = {x_label:this.labels[i], value:this.values[i], key:'??'};
+			mc.tooltip = tooltip;
 			
 			// add the MovieClip to our array:
 			this.pie_mcs[i] = mc;
@@ -263,10 +265,8 @@ class PieStyle extends Style
 			fmt.align = "center";
 			legend_tf.setTextFormat(fmt);
 	
-			//set value
-			//pieSlice.val = value;
-			pieSlice.tool_tip_title = label;
-			pieSlice.tool_tip_value = value.tooltip;
+			//pieSlice.tool_tip_title = label;
+			//pieSlice.tool_tip_value = value.tooltip;
 		
 			pieSlice._alpha = this.alpha;
 			pieSlice._alpha_original = this.alpha;	// <-- remember our original alpha while tweening
