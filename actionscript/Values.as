@@ -1,9 +1,10 @@
 ﻿class Values
 {
-	public var styles:Array=Array();
+	public var styles:Array;
 
 	public function Values( lv:LoadVars, bgColour:Number, labels:Array )
 	{
+		this.styles = [];
 		var name:String = '';
 		var c:Number=1;
 		
