@@ -404,6 +404,12 @@ function make_chart()
 	// tell the x axis where the grid lines are:
 	_root._x_axis.set_grid_count( _root.chartValues.length() );
 	
+	if( _root._keys != undefined )
+	{
+		//_root._keys.del();
+		//_root.oops('deleted');
+	}
+		
 	_root._keys = new Keys(
 		(_root._y_legend.width()+_root._y_axis_labels.width()+_root._y_axis.width()),		// <-- from left
 		_root._title.height(),											// <-- from top

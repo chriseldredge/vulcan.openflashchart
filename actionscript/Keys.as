@@ -29,6 +29,16 @@
 		this.move();
 	}
 	
+	//
+	// this should be in the destructor, but
+	// actionscript does not support them :-(
+	//
+	function del()
+	{
+		for( var i=0; i<this.key_mcs.length; i++ )
+			removeMovieClip(this.key_mcs[i]);
+	}
+	
 	// each key is a MovieClip with text on it
 	function make_key( st:Style, c:Number )
 	{
