@@ -1,10 +1,12 @@
 <?
-function open_flash_chart_object( $width, $height, $url, $use_swfobject=false )
+function open_flash_chart_object( $width, $height, $url, $use_swfobject=true )
 {
-	$ie = strstr(getenv('HTTP_USER_AGENT'), 'MSIE');
+	//
+    // I think we may use swfobject for all browsers,
+    // not JUST for IE...
+    //
+    //$ie = strstr(getenv('HTTP_USER_AGENT'), 'MSIE');
     
-    $ie = false;
-
     //
     // escape the & and stuff:
     //
@@ -30,7 +32,7 @@ function open_flash_chart_object( $width, $height, $url, $use_swfobject=false )
         $div_name .= '_'. $open_flash_chart_seqno;
     }
     
-	if( $ie )
+	if( $use_swfobject )
     {
 		// Using library for auto-enabling Flash object on IE, disabled-Javascript proof
 	    
@@ -57,7 +59,7 @@ function open_flash_chart_object( $width, $height, $url, $use_swfobject=false )
     echo 'type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" id="'. $obj_id .'"/>';
 	echo '</object>';
 
-	if ( $ie ) {
+	if ( $use_swfobject ) {
 		echo '</noscript>';
 	}
 }
