@@ -1,15 +1,18 @@
 ﻿class YAxisLabels
 {
-	public var labelNames:Array;
+	public var labels:Array;
 	private var steps:Number;
+	private var right:Boolean;
 	
 	function YAxisLabels( y_label_style:YLabelStyle, min:Number, max:Number, steps:Number, nr:Number, lv:LoadVars )
 	{
 		this.steps = steps;
-		this.labelNames = [];
+		this.labels = Array();
+		this.right = nr==2;
+		
 		var name:String = '';
 		
-		if(nr == 1)
+		if( !this.right )
 		{
 			// are the Y Labels visible?
 			if( !y_label_style.show_labels )
@@ -17,9 +20,8 @@
 			
 			name = 'y_label_';
 		}
-		else if (nr = 2)
+		else
 		{
-			
 			// are the Y Labels visible?
 			if( !lv.show_y2 )
 				return;
@@ -29,11 +31,14 @@
 			
 		// labels
 		var every:Number = (max-min)/this.steps;
-		
+		var count:Number = 0;
 		for( var i:Number=min; i<=max; i+=every )
 		{
-			this.yAxisLabel( i, name+String(i), y_label_style, nr );
-			this.labelNames.push( name+String(i) );
+			var tmp = {
+				textfield: this.yAxisLabel( i, name+String(count++), y_label_style, nr ),
+				value: i
+				};
+			this.labels.push( tmp );
 		}
 	}
 
@@ -48,7 +53,8 @@
 		// distructor method, but I don't think actionscript has these :-(
 		if( _root[name] != undefined )
 			_root[name].removeTextField();
-											
+		
+		//var mc:MovieClip = _root.createEmptyMovieClip( name, _root.getNextHighestDepth() );
 		var tf:TextField = _root.createTextField(name, _root.getNextHighestDepth(), 0, 0, 100, 100);
 		//tf.border = true;
 		tf.text = _root.format(title);
@@ -59,6 +65,8 @@
 		fmt.align = "right";
 		tf.setTextFormat(fmt);
 		tf.autoSize="right";
+		
+		return tf;
 	}
 
 	// move y axis labels to the correct x pos
@@ -66,20 +74,18 @@
 	{
 		var maxWidth:Number = this.width();
 		
-		for( var i in this.labelNames )
+		for( var i=0; i<this.labels.length; i++ )
 		{
 			// right align
-			_root[this.labelNames[i]]._x = left - _root[this.labelNames[i]]._width + maxWidth;
+			var tf:TextField = this.labels[i].textfield;
+			tf._x = left - tf._width + maxWidth;
 		}
 		
 		// now move it to the correct Y, vertical center align
-		var tick:Number = box.height/this.steps;
-		
-		var count:Number = 0;
-		for( var i in this.labelNames )
+		for( var i=0; i<this.labels.length; i++ )
 		{
-			_root[this.labelNames[i]]._y = box.top + (tick*count) - (_root[this.labelNames[i]]._height/2);
-			count+=1;
+			var tf:TextField = this.labels[i].textfield;
+			tf._y = box.getY( this.labels[i].value, this.right ) - (tf._height/2);
 		}
 	}
 
@@ -87,9 +93,10 @@
 	function width()
 	{
 		var max:Number = 0;
-		for( var x in this.labelNames )
+		for( var i=0; i<this.labels.length; i++ )
 		{
-			max = Math.max( max, _root[this.labelNames[x]]._width );
+			var tf:TextField = this.labels[i].textfield;
+			max = Math.max( max, tf._width );
 		}
 		return max;
 	}

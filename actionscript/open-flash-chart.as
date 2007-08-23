@@ -438,6 +438,19 @@ function LoadVarsOnLoad( success )
 	if( _root.oops != undefined )
 		removeMovieClip("oops");	
 	
+	//added by Maik Fox
+	//complete cleanup, no known side effects yet  ;) 
+	for(i in _root)
+	{
+		//if i is a movie clip, remove it
+		if(typeof(_root[i])=='movieclip')
+		{
+			removeMovieClip(_root[i]);
+		}
+		//delete it so that the garbage collector can collect it
+		delete i;       
+	}
+	
 	_root.css = new Css('margin-top: 30;margin-right: 40;');
 
 	//
@@ -608,13 +621,16 @@ function reload( u:String ):Void
 	// inform the user we are reloading data:
 	_root.loading = new Loading('Loading data...');
 	
-	var lv:LoadVars = new LoadVars();
+	//removed by Maik Fox
+	//this is not neccessary as we already set up a LoadVars object
+	/*var lv:LoadVars = new LoadVars();
 	
 	// ugh!:
 	lv.onLoad = LoadVarsOnLoad;
 	lv.make_chart = make_chart;
 	lv.make_pie = make_pie;
 	// 
+	*/ 
 
 	var url:String = '';
 	
@@ -685,7 +701,7 @@ setContextualMenu();
 
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-23.txt";
+	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-25.txt";
 	//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 	
 lv.load(_root.data);

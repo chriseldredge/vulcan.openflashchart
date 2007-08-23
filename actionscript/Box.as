@@ -126,7 +126,7 @@
 	}
 	
 	// takes a value and returns the screen Y location
-	function getY( i:Number, right_axis:Boolean )
+	function getY_old( i:Number, right_axis:Boolean )
 	{
 		var steps:Number = this.height/(this.minmax.range( right_axis ));
 		
@@ -136,6 +136,16 @@
 		// move up (-Y) to our point (don't forget that y_min will shift it down)
 		y -= i*steps;
 		return y;
+	}
+	
+	// takes a value and returns the screen Y location
+	function getY( i:Number, right_axis:Boolean )
+	{
+		var steps:Number = this.height/(this.minmax.range( right_axis ));
+		var y:Number = this.bottom;
+		
+		// move up (-Y) to our point (don't forget that y_min will shift it down)
+		return this.bottom-(this.minmax.min( right_axis )-i)*steps*-1;
 	}
 	
 	function width_():Number
