@@ -124,7 +124,8 @@
 		for( var i:Number=this.min; i<=this.max; i+=every )
 		{
 			// start at the bottom and work up:
-			var y:Number = box.getY(i);
+			var y:Number = box.getY(i,false);
+
 			this.mc.moveTo( box.left, y );
 			if( i % this.ticks.steps == 0 )
 				this.mc.lineTo( box.left-this.ticks.big, y );
