@@ -15,7 +15,14 @@
 			if( lv['values'+name ] != undefined )
 			{
 				this.styles[c-1] = this.make_style( lv, name, c, bgColour );
-				this.styles[c-1].set_values( this.parseVal( lv['values'+name] ), labels );
+				
+				//
+				// UGH -- quick fix for candle charts. Need to fix all bar charts
+				//
+				if( lv['candle'+name] != undefined )
+					this.styles[c-1].set_values( lv['values'+name], labels, lv['links'+name] );
+				else
+					this.styles[c-1].set_values( this.parseVal( lv['values'+name] ) );
 			}
 			else
 				break;		// <-- stop loading data
@@ -44,12 +51,16 @@
 			return new BarGlassStyle(lv['bar_glass'+name],'bar_'+c);
 		else if( lv['bar_fade'+name] != undefined )
 			return new BarFade(lv['bar_fade'+name],'bar_'+c);
+		else if( lv['bar_zebra'+name] != undefined )
+			return new BarZebra(lv['bar_zebra'+name],'bar_'+c);
 		else if( lv['bar_arrow'+name] != undefined )
 			return new BarArrow(lv['bar_arrow'+name],'bar_'+c);
 		else if( lv['bar_3d'+name] != undefined )
 			return new Bar3D(lv['bar_3d'+name],'bar_'+c);
 		else if( lv['pie'+name] != undefined )
 			return new PieStyle(lv['pie'+name], lv.x_labels!=undefined ? lv['values'] : "", lv['links']);
+		else if( lv['candle'+name] != undefined )
+			return new CandleStyle(lv['candle'+name],'bar_'+c);
 	}
 	
 	private function parseVal( val:String ):Array

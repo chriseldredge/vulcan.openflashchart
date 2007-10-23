@@ -21,6 +21,17 @@ MovieClip.prototype.rect = function( x:Number, y:Number, width:Number, height:Nu
 	
 }
 
+MovieClip.prototype.rect2 = function( x:Number, y:Number, width:Number, height:Number, colour:Number, alpha:Number )
+{
+	this.beginFill( colour, alpha );
+    this.moveTo( x, y );
+    this.lineTo( x+width, y );
+    this.lineTo( x+width, y+height );
+    this.lineTo( x, y+height );
+	this.lineTo( x, y );
+    this.endFill();
+}
+
 function get_colour( col:String )
 {
 	if( col.substr(0,2) == '0x' )
@@ -67,6 +78,23 @@ function format( i:Number )
 		s = '-'+s;
 		
 	return s;
+}
+
+function formatTime( sval:String )
+{
+	var val:Number = parseFloat(sval);
+	var hours:Number = Math.floor(val);
+	var minutes:Number = Math.round((val - hours) * 60);
+	var rval:String = "" + hours;
+	if (rval.length < 2) {
+		rval = "0" + rval;
+	}
+	if (minutes < 10) {
+		rval = rval + ":0" + minutes;
+	} else {
+		rval = rval + ":" + minutes;
+	}
+	return rval;
 }
 
 // added by NetVicious June 2007
@@ -123,6 +151,22 @@ function FadeIn()
     }
 }
 
+function FadeIn2()
+{
+	this.onEnterFrame = function ()
+    {
+        if( this._alpha < 100 )
+        {
+            this._alpha += 10;
+        }
+        else
+        {
+			this._alpha = 100;
+            delete this.onEnterFrame;
+        }
+    }
+}
+
 function FadeOut()
 {
 	this.onEnterFrame = function ()
@@ -148,6 +192,22 @@ function hide_tip( owner:Object )
 		removeMovieClip("tooltip");
 }
 
+function get_x_legend()
+{
+	if( _root._x_legend != undefined )
+		return _root._x_legend.get_legend();
+}
+
+function get_tooltip_string()
+{
+	return _root.tool_tip_wrapper;
+}
+
+function get_x_axis_label( i:Number )
+{
+	return _root._x_axis_labels.get( i );
+}
+
 function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 {
 	if( ( _root.tooltip != undefined ) )
@@ -170,6 +230,7 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 		tmp = _root.tool_tip_wrapper.replace('#val#',tip_obj.value);
 		tmp = tmp.replace('#key#',tip_obj.key);
 		tmp = tmp.replace('#x_label#',tip_obj.x_label);
+		tmp = tmp.replace('#val:time#',formatTime(tip_obj.value));
 		
 		if( _root._x_legend != undefined )
 			tmp = tmp.replace('#x_legend#',_root._x_legend.get_legend());
@@ -253,6 +314,48 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 
 }
 
+_root.onMouseMove = function()
+{
+	if( _root.chartValues == undefined )
+		return;
+	
+	var tmp:Array = [];
+	var style:Style = null;
+	
+	for( var i:Number=0; i < _root.chartValues.styles.length; i++)
+	{
+		var style:Style = _root.chartValues.styles[i];
+		
+		// push the {ExPoint,distance} object
+		tmp.push( style.closest( _root._xmouse, _root._ymouse ) );
+	}
+	
+	var xx:Object = {point:null, distance_x:Number.MAX_VALUE, distance_y:Number.MAX_VALUE };
+	for( var i:Number=0; i < tmp.length; i++ )
+	{
+		if( tmp[i].distance_x == xx.distance_x )
+		{
+			//
+			// points are in the same column, so choose
+			// the closest to the mouse in the Y
+			//
+			if( tmp[i].distance_y < xx.distance_y )
+				xx = tmp[i];
+		}
+		else if( tmp[i].distance_x < xx.distance_x )
+		{
+			xx = tmp[i];
+		}
+	}
+
+	_root.tooltip_x.draw( xx.point );
+	xx.point.is_tip = true;
+	
+	for( var i:Number=0; i < _root.chartValues.styles.length; i++)
+		_root.chartValues.styles[i].highlight_value();
+}
+
+
 
 function hide_oops()
 {
@@ -316,8 +419,12 @@ function make_chart()
 	//
 	// the order that these are built determines their Z order:
 	//
+	
+	
+	
 	_root._inner_background = new InnerBackground( this );
-
+	
+	
 	_root._min_max = new MinMax( this );
 
 	// we build the graph from top to bottom 
@@ -398,31 +505,27 @@ function make_chart()
 			);
 	}
 
+	//_root.mc2 = _root.createEmptyMovieClip( "tooltipX_mouse_out", _root.getNextHighestDepth() );
+	//_root.mc2.rect2( 0, 0, Stage.width, Stage.height, 0, 0 );
+	//_root.mc2.onRollOut = function() { this._tooltip.hide(); };
+	//_root.mc2.useHandCursor = false;
+	
 	// The chart values are defined last and are on TOP of every thing else
 	_root.chartValues = new Values( this, _root._background.colour, _root._x_axis_labels.labels );
 	
 	// tell the x axis where the grid lines are:
 	_root._x_axis.set_grid_count( _root.chartValues.length() );
 	
-	if( _root._keys != undefined )
-	{
-		//_root._keys.del();
-		//_root.oops('deleted');
-	}
-		
 	_root._keys = new Keys(
 		(_root._y_legend.width()+_root._y_axis_labels.width()+_root._y_axis.width()),		// <-- from left
 		_root._title.height(),											// <-- from top
 		_root.chartValues.styles );
 
+	// this is last and floats over everything!
+	_root.tooltip_x = new Tooltip();
+	
+	//_root.mc2._tooltip = _root.tooltip_x;
 }
-
-var lv:LoadVars = new LoadVars();
-
-//lv.onLoad = function( success )
-lv.onLoad = LoadVarsOnLoad;
-lv.make_chart = make_chart;
-lv.make_pie = make_pie;
 
 function LoadVarsOnLoad( success )
 {
@@ -615,6 +718,12 @@ function hide_message():Void
 	hide_oops();
 }
 
+ExternalInterface.addCallback("rollout", null, rollout);
+function rollout():Void
+{
+	_root.tooltip_x.hide();
+}
+
 ExternalInterface.addCallback("reload", null, reload);
 function reload( u:String ):Void
 {
@@ -699,11 +808,46 @@ Stage.addListener(stageListener);
 // Right click menu:
 setContextualMenu();
 
+//
+// LOAD THE DATA
+//
+
+var lv:LoadVars = new LoadVars();
+
+//lv.onLoad = function( success )
+lv.onLoad = LoadVarsOnLoad;
+lv.make_chart = make_chart;
+lv.make_pie = make_pie;
+
 // from URL
 if( _root.data == undefined )
-	_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-25.txt";
-	//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
-	
-lv.load(_root.data);
+{
+	if( _root.variables == undefined )
+	{
+		//
+		// We are in the IDE
+		//
+		_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-29.txt";
+		//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
+		lv.load(_root.data);
+	}
+	else
+	{
+		//
+		// Load from inline HTML variables
+		//
+		_root.LoadVarsOnLoad = LoadVarsOnLoad;
+		//_root.make_chart = make_chart;
+		//_root.make_pie = make_pie;
+		_root.LoadVarsOnLoad( true );
+	}
+}
+else
+{
+	//
+	// An external file
+	//
+	lv.load(_root.data);
+}
 
 stop();

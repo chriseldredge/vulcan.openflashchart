@@ -5,7 +5,7 @@
     var controlRadius = radius/Math.cos(span);
     var anchorAngle=0, controlAngle=0;
     this.moveTo(x+Math.cos(anchorAngle)*radius, y+Math.sin(anchorAngle)*radius);
-	
+		
 	this.beginFill( colour, 100 );
     for (var i=0; i<accuracy; ++i)
 	{

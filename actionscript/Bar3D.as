@@ -8,10 +8,10 @@
 		super( val, name );
 	}
 	
-	private function top( mc:MovieClip, val:ExPoint )
+	private function top( mc:MovieClip, val:PointBar )
 	{
 		//
-		var w:Number = val.bar_width;
+		var w:Number = val.width;
 		//var rad:Number = 7;
 		
 //		mc.lineStyle(0, this.outline_colour, 100);
@@ -33,16 +33,16 @@
 		mc.lineTo(w-12, 12);
 		mc.lineTo(-12, 12);
 		mc.endFill();
-		mc._x = val.left;
+		mc._x = val.x;
 		mc._y = val.y;
 	}
 	
-	private function front( mc:MovieClip, val:ExPoint )
+	private function front( mc:MovieClip, val:PointBar )
 	{
 		//
-		var w:Number = val.bar_width;
+		var w:Number = val.width;
 		var h:Number = val.bar_bottom-val.y;
-		var x:Number = val.left;
+		var x:Number = val.x;
 		var y:Number = val.y;
 		var rad:Number = 7;
 		
@@ -65,12 +65,12 @@
 		mc.endFill();
 	}
 	
-	private function side( mc:MovieClip, val:ExPoint )
+	private function side( mc:MovieClip, val:PointBar )
 	{
 		//
-		var w:Number = val.bar_width;
+		var w:Number = val.width;
 		var h:Number = val.bar_bottom-val.y;
-		var x:Number = val.left;
+		var x:Number = val.x;
 		var y:Number = val.y;
 		var rad:Number = 7;
 		
@@ -91,7 +91,7 @@
 		mc.endFill();
 	};
 	
-	public function draw_bar( val:ExPoint, i:Number )
+	public function draw_bar( val:PointBar, i:Number )
 	{
 		var mc:MovieClip = this.bar_mcs[i];
 		

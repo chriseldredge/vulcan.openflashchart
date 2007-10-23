@@ -35,6 +35,14 @@
 			this.show_label( label, 'x_label_'+String(this.labels.length) );
 	}
 	
+	function get( i:Number )
+	{
+		if( i<this.labels.length )
+			return this.labels[i];
+		else
+			return '';
+	}
+	
 	function del()
 	{
 		this.labels.shift();

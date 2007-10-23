@@ -25,11 +25,11 @@
 		
 	}
 	
-	private function glass( mc:MovieClip, val:ExPoint )
+	private function glass( mc:MovieClip, val:PointBar )
 	{
 		var x:Number = 3;
 		var y:Number = x;
-		var width:Number = (val.bar_width/2)-x;
+		var width:Number = (val.width/2)-x;
 		var height:Number = val.bar_bottom-val.y-y-1;
 		
 		//set gradient fill
@@ -57,12 +57,12 @@
 
 	}
 	
-	private function bg( mc:MovieClip, val:ExPoint )
+	private function bg( mc:MovieClip, val:PointBar )
 	{
 		//
-		var w:Number = val.bar_width;
+		var w:Number = val.width;
 		var h:Number = val.bar_bottom-val.y;
-		var x:Number = val.left;
+		var x:Number = val.x;
 		var y:Number = val.y;
 		var rad:Number = 7;
 		
@@ -80,7 +80,7 @@
 		mc._y = y;
 	};
 	
-	public function draw_bar( val:ExPoint, i:Number )
+	public function draw_bar( val:PointBar, i:Number )
 	{
 		var mc:MovieClip = this.bar_mcs[i];
 		

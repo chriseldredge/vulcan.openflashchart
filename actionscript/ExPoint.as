@@ -8,6 +8,8 @@
 	public var bar_width:Number=0;
 	public var bar_bottom:Number=0;
 	
+	public var is_tip:Boolean = false;
+	
 	public function ExPoint( left:Number, center:Number, y:Number, width:Number, bar_bottom:Number, tooltip:Number )
 	{
 		this.left = left;
