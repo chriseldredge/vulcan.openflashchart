@@ -5,7 +5,7 @@
 		super( val, name );
 	}
 	
-	public function draw_bar( val:ExPoint, i:Number )
+	public function draw_bar( val:PointBar, i:Number )
 	{
 		var mc:MovieClip = super.draw_bar( val, i );
 		
@@ -13,7 +13,7 @@
 		
 		mc.lineStyle( 2, 0x000000, 100);
 		
-		mc.moveTo( val.left+(val.bar_width/2), val.bar_bottom );
+		mc.moveTo( val.x+(val.width/2), val.bar_bottom );
 		
 		var steps:Number = Math.floor( 4+Math.random()*4);
 		var height:Number = (val.bar_bottom-val.y)/steps;
@@ -22,31 +22,31 @@
 		
 		for( var i:Number=1; i<steps; i++ )
 		{
-			x = Math.random()*(val.bar_width/2);
+			x = Math.random()*(val.width/2);
 			y = val.bar_bottom-(height*i)
 			
 			// zig-zag the line:
 			if( i%2==0 )
-				x += val.left;
+				x += val.x;
 			else
-				x = val.left+val.bar_width-x;
+				x = val.x+val.width-x;
 				
 			mc.lineTo( x, y );
 		}
-		mc.lineTo( val.left+(val.bar_width/2), val.y );
+		mc.lineTo( val.x+(val.width/2), val.y );
 		
 		//
 		//
 		//
 		
-		mc.moveTo( val.left+(val.bar_width/2), val.bar_bottom );
+		mc.moveTo( val.x+(val.width/2), val.bar_bottom );
 		
 		var steps:Number = 8;
 		var height:Number = (val.bar_bottom-val.y)/steps;
 		var x:Number;
 		var y:Number;
 		
-		var prev_x:Number = val.left+(val.bar_width/2);
+		var prev_x:Number = val.x+(val.width/2);
 		var prev_y:Number = val.bar_bottom;
 		
 		for( var i:Number=1; i<steps; i++ )
@@ -56,15 +56,15 @@
 			
 			// zig-zag the line:
 			if( i%2==0 )
-				x = val.left;
+				x = val.x;
 			else
-				x = val.left+val.bar_width;
+				x = val.x+val.width;
 				
-			mc.curveTo( x, y, val.left+(val.bar_width/2), val.bar_bottom-(height*(i+1)) );
+			mc.curveTo( x, y, val.x+(val.width/2), val.bar_bottom-(height*(i+1)) );
 		}
-		mc.lineTo( val.left+(val.bar_width/2), val.y );
+		mc.lineTo( val.x+(val.width/2), val.y );
 		
-		x = val.left+(val.bar_width/2)-x;
+		x = val.x+(val.width/2)-x;
 		y = val.y-y;
 		
 		var angle:Number = Math.atan(y/x)/(Math.PI/180);
@@ -96,10 +96,10 @@
 
 		mc.lineStyle( 0, 0x0000E0, 100);
 		//mc.beginFill( 0x0000E0, 100 );
-		mc.moveTo( val.left+(val.bar_width/2), val.y );
-		mc.lineTo( val.left+(val.bar_width/2)+x_1, val.y+y_1 );
-		mc.lineTo( val.left+(val.bar_width/2)+x_2, val.y+y_2 );
-		mc.lineTo( val.left+(val.bar_width/2), val.y );
+		mc.moveTo( val.x+(val.width/2), val.y );
+		mc.lineTo( val.x+(val.width/2)+x_1, val.y+y_1 );
+		mc.lineTo( val.x+(val.width/2)+x_2, val.y+y_2 );
+		mc.lineTo( val.x+(val.width/2), val.y );
 		//mc.endFill();
 		
 		return mc;

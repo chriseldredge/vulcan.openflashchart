@@ -41,5 +41,5 @@
 
 &y2_legend=Free Ram (mb),12,0x164166&
 
-&tool_tip=#x_legend#, € %25 #x_label#<br>#key#: £#val#.00&
+&tool_tip=#x_legend#, € %25 #x_label#<br>#key#: £#val#.00<br>#val:time#&
 &x_legend=2007,12,0x164166&

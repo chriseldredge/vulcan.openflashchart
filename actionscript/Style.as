@@ -10,7 +10,7 @@
 	public var is_bar:Boolean = false;
 	public var alpha:Number = 50;		// <- transparancy
 	
-	public var values:Array = [];
+	public var values:Array;
 	public var ExPoints:Array;
 	
 	
@@ -25,4 +25,11 @@
 
 	public function draw( val, mc )
 	{}
+	
+	public function highlight_value()
+	{}
+	
+	public function closest( x:Number, y:Number )
+	{}
+
 }

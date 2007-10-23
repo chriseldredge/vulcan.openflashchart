@@ -25,7 +25,7 @@
 		
 	}
 	
-	public function draw_bar( val:ExPoint, i:Number )
+	public function draw_bar( val:PointBar, i:Number )
 	{
 		var mc:MovieClip = super.draw_bar( val, i );
 		
@@ -45,8 +45,8 @@
 		
 		mc.lineStyle(2,this.outline_colour,100);
 		mc.moveTo( 0, 0 );
-    	mc.lineTo( val.bar_width, 0 );
-    	mc.lineTo( val.bar_width, height );
+    	mc.lineTo( val.width, 0 );
+    	mc.lineTo( val.width, height );
     	mc.lineTo( 0, height );
 		mc.lineTo( 0, 0 );
 

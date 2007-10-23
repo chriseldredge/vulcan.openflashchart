@@ -32,6 +32,12 @@
 		// draw the area behine the line:
 		this.mc_area = _root.createEmptyMovieClip( name+'_area', _root.getNextHighestDepth());
 		this.mc = _root.createEmptyMovieClip( name, _root.getNextHighestDepth());
+		
+		this.mc2 = _root.createEmptyMovieClip( name+'_hightlight', _root.getNextHighestDepth());
+		this.mc2.lineStyle( 0, 0, 0);
+		this.mc2.fillCircle( 0, 0, this.circle_size+2, 15, this.colour );
+		this.mc2.fillCircle( 0, 0, this.circle_size-this.line_width+2, 15, this.bgColour);
+		this.mc2._visible = false;
 	}
 	
 	public function valPos( b:Box, right_axis:Boolean, min:Number )
@@ -58,21 +64,21 @@
 		while( this.ExPoints[pos] == null )
 			pos++;
 			
-		this.mc_area.moveTo( this.ExPoints[pos].center, this.bottom );
-		this.mc_area.lineTo( this.ExPoints[pos].center, this.ExPoints[pos].y );
+		this.mc_area.moveTo( this.ExPoints[pos].x, this.bottom );
+		this.mc_area.lineTo( this.ExPoints[pos].x, this.ExPoints[pos].y );
 		
-		var last:ExPoint = null;
+		var last:Point = null;
 		for( var i:Number=pos+1; i < this.ExPoints.length; i++ )
 		{
 			if( this.ExPoints[i] != null )
 			{
-				this.mc_area.lineTo( this.ExPoints[i].center, this.ExPoints[i].y );
+				this.mc_area.lineTo( this.ExPoints[i].x, this.ExPoints[i].y );
 				last = this.ExPoints[i];
 			}
 		}
 		
 		if( last != null )
-			this.mc_area.lineTo( last.center, this.bottom );
+			this.mc_area.lineTo( last.x, this.bottom );
 			
 		this.mc_area.endFill();
 		

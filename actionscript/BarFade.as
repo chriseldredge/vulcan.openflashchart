@@ -5,7 +5,7 @@
 		super( val, name );
 	}
 	
-	public function draw_bar( val:ExPoint, i:Number )
+	public function draw_bar( val:PointBar, i:Number )
 	{
 		var mc:MovieClip = this.bar_mcs[i];
 		mc.clear();
@@ -28,19 +28,19 @@
 		var colors:Array = [this.colour,0xFFFFFF];
 		var alphas:Array = [100,0];
 		var ratios:Array = [0,255];
-		var matrix:Object = { matrixType:"box", x:0, y:0, w:val.bar_width, h:height, r:(90/180)*Math.PI };
+		var matrix:Object = { matrixType:"box", x:0, y:0, w:val.width, h:height, r:(90/180)*Math.PI };
 		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
 		
 		
 		//mc.beginFill( this.colour, 100 );
 		mc.moveTo( 0, 0 );
-    	mc.lineTo( val.bar_width, 0 );
-    	mc.lineTo( val.bar_width, height );
+    	mc.lineTo( val.width, 0 );
+    	mc.lineTo( val.width, height );
     	mc.lineTo( 0, height );
 		mc.lineTo( 0, 0 );
     	mc.endFill();
 		
-		mc._x = val.left;
+		mc._x = val.x;
 		mc._y = top;
 		
 		mc._alpha = this.alpha;

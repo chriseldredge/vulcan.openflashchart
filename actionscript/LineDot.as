@@ -26,9 +26,17 @@
 		if( length( vals ) > 4 )
 			this.circle_size = Number( vals[4] );
 			
+		//this.mc2 = _root.createEmptyMovieClip(name, _root.getNextHighestDepth());
+		this.mc2.clear();
+		this.mc2.lineStyle( 0, 0, 0);
+		this.mc2.fillCircle( 0, 0, this.circle_size+2, 15, this.bgColour );
+		//this.mc2.fillCircle( 0, 0, this.circle_size-this.line_width+2, 15, this.colour );
+		this.mc2.fillCircle( 0, 0, this.circle_size+1, 15, this.colour );
+		this.mc2._visible = false;
+			
 	}
 	
-	// override Style:set_values
+	/* override Style:set_values
 	function set_values( v:Array, labels:Array )
 	{
 		for( var i:Number=0; i < v.length; i++ )
@@ -38,6 +46,8 @@
 	public function add( val:String, tool_tip:String )
 	{
 		super.add( val );
+		
+		return;
 		
 		if( this.circle_size > 0 )
 		{
@@ -55,7 +65,7 @@
 				this.mcs.push( null );
 		}
 	}
-	
+	*/
 	// delete the left most value
 	function del()
 	{
@@ -64,14 +74,25 @@
 		this.values.shift();
 	}
 	
-	
 	public function draw()
 	{
 		super.draw();
 		
 		if( this.circle_size == 0 )
 			return;
-			
+		
+		for( var i:Number=0; i < this.ExPoints.length; i++ )
+		{
+			var val:Point = this.ExPoints[i];
+			this.mc.lineStyle( 0, 0, 0);
+			this.mc.fillCircle( val.x, val.y, this.circle_size, 15, this.bgColour );
+			//this.mc.fillCircle( val.x, val.y, this.circle_size-this.line_width, 15, this.colour );
+			this.mc.fillCircle( val.x, val.y, this.circle_size-1, 15, this.colour );
+		}
+		
+		return;
+		
+		
 		for( var i:Number=0; i < this.ExPoints.length; i++ )
 			super.move_dot( this.ExPoints[i], this.mcs[i] )
 	}

@@ -40,15 +40,15 @@
 		{
 			var mc:MovieClip = _root.createEmptyMovieClip( this.name+'_'+i, _root.getNextHighestDepth() );
 		
-			mc.onRollOver = _root.FadeIn;
+			mc.onRollOver = _root.FadeIn2;
 			mc.onRollOut = _root.FadeOut;
 			
 			//mc.onRollOver = ChartUtil.glowIn;
 			
 			// this is used in FadeIn and FadeOut
 			//mc.tool_tip_title = labels[i];
-			var tooltip:Object = {x_label:labels[i], value:this.values[i], key:this.key};
-			mc.tooltip = tooltip;
+			//var tooltip:Object = {x_label:labels[i], value:this.values[i], key:this.key};
+			//mc.tooltip = tooltip;
 		
 			// add the MovieClip to our array:
 			this.bar_mcs[i] = mc;
@@ -61,31 +61,20 @@
 	{
 		this.ExPoints=Array();
 		
-		var item_width:Number = b.width_() / values.length;
-		
-		// the bar(s) have gaps between them:
-		var bar_set_width:Number = item_width*0.8;
-		// get the margin between sets of bars:
-		var bar_left:Number = b.left_()+((item_width-bar_set_width)/2);
-		// 1 bar == 100% wide, 2 bars = 50% wide each
-		var bar_width:Number = bar_set_width/bar_count;
-		
 		for( var i:Number=0; i < this.values.length; i++)
 		{
-
-			var left2:Number = bar_left+(i*item_width);
-			left2 += bar_width*bar;
 			
-			this.ExPoints.push(
-				new ExPoint(
-					left2,					// x position of value
-					0,						// center (not applicable for a bar)
-					b.getY( Number(this.values[i]), right_axis ),
-					bar_width,
-					b.getYbottom( right_axis ),
-					Number(values[i])
-					)
+			var tmp:Point = b.make_point_bar( i, Number(this.values[i]), right_axis, bar, bar_count );
+			
+			tmp.make_tooltip(
+				_root.get_tooltip_string(),
+				this.key,
+				Number(this.values[i]),
+				_root.get_x_legend(),
+				_root.get_x_axis_label(i)
 				);
+				
+			this.ExPoints.push( tmp );
 		}
 	}
 	
@@ -95,7 +84,7 @@
 			this.draw_bar( this.ExPoints[i], i );
 	}
 	
-	public function draw_bar( val:ExPoint, i:Number )
+	public function draw_bar( val:PointBar, i:Number )
 	{
 		var top:Number;
 		var height:Number;
@@ -116,13 +105,13 @@
 		mc.clear();
 		mc.beginFill( this.colour, 100 );
     	mc.moveTo( 0, 0 );
-    	mc.lineTo( val.bar_width, 0 );
-    	mc.lineTo( val.bar_width, height );
+    	mc.lineTo( val.width, 0 );
+    	mc.lineTo( val.width, height );
     	mc.lineTo( 0, height );
 		mc.lineTo( 0, 0 );
     	mc.endFill();
 		
-		mc._x = val.left;
+		mc._x = val.x;
 		mc._y = top;
 	
 		mc._alpha = this.alpha;
@@ -133,5 +122,52 @@
 		
 		// we return this MovieClip to FilledBarStyle
 		return mc;
+	}
+	
+	/*  
+	    ------O------
+	          A
+			  
+	    +-----+
+		|  B  |
+		|     |   +-----+
+		|     |   |  C  |
+		|     |   |     |
+	    +-----+---+-----+
+		   1   2
+		
+	*/
+	public function closest( x:Number, y:Number )
+	{
+		var shortest:Number = Number.MAX_VALUE;
+		var ex:PointBar = null;
+		
+		for( var i:Number=0; i < this.ExPoints.length; i++)
+		{
+			this.ExPoints[i].is_tip = false;
+			
+			if( (x > this.ExPoints[i].x) && (x < this.ExPoints[i].x+this.ExPoints[i].width) )
+			{
+				// mouse is in position 1
+				shortest = 0;
+				ex = this.ExPoints[i];
+			}
+			else
+			{
+				// mouse is in position 2
+				// get distance to left side and right side
+				var d1:Number = Math.abs( x - this.ExPoints[i].x );
+				var d2:Number = Math.abs( x - (this.ExPoints[i].x+this.ExPoints[i].width) );
+				var min:Number = Math.min( d1, d2 );
+				if( min < shortest )
+				{
+					shortest = min;
+					ex = this.ExPoints[i];
+				}
+			}
+		}
+		var dy:Number = Math.abs( y - ex.y );
+		
+		return { point:ex, distance_x:shortest, distance_y:dy };
 	}
 }

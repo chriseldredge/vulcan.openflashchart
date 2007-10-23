@@ -171,4 +171,66 @@
 		
 		return this.get_x_pos(i) - this.tick_offset;
 	}
+	
+	function make_point( x:Number, y:Number, right_axis:Boolean )
+	{
+		return new Point(
+			this.get_x_pos( x ),
+			this.getY( y, right_axis ),
+			y
+			);
+	}
+	
+	function make_point_bar( x:Number, y:Number, right_axis:Boolean, group:Number, group_count:Number )
+	{
+		
+		var item_width:Number = this.width_() / this.count;
+		
+		// the bar(s) have gaps between them:
+		var bar_set_width:Number = item_width*0.8;
+		
+		// get the margin between sets of bars:
+		var bar_left:Number = this.left_()+((item_width-bar_set_width)/2);
+		// 1 bar == 100% wide, 2 bars = 50% wide each
+		var bar_width:Number = bar_set_width/group_count;
+		
+		var left:Number = bar_left+(x*item_width);
+		left += bar_width*group;
+		
+		return new PointBar(
+			left,
+			this.getY( y, right_axis ),
+			bar_width,
+			this.getYbottom( right_axis )
+			);
+	}
+	
+	function make_point_candle( x:Number, high:Number, open:Number, close:Number, low:Number, right_axis:Boolean, group:Number, group_count:Number )
+	{
+		
+		var item_width:Number = this.width_() / this.count;
+		
+		// the bar(s) have gaps between them:
+		var bar_set_width:Number = item_width*0.8;
+		
+		// get the margin between sets of bars:
+		var bar_left:Number = this.left_()+((item_width-bar_set_width)/2);
+		// 1 bar == 100% wide, 2 bars = 50% wide each
+		var bar_width:Number = bar_set_width/group_count;
+		
+		var left:Number = bar_left+(x*item_width);
+		left += bar_width*group;
+		
+		return new PointCandle(
+			left,
+			this.getY( high,  right_axis ),
+			this.getY( open,  right_axis ),
+			this.getY( close, right_axis ),
+			this.getY( low,   right_axis ),
+			high,
+			bar_width,
+			open
+			);
+		
+	}
 }
