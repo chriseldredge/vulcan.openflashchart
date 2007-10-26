@@ -34,7 +34,7 @@
 		
 		//set gradient fill
 		var colors:Array = [0xFFFFFF,0xFFFFFF];
-		var alphas:Array = [30, 70];
+		var alphas:Array = [100, 100];//[30, 70];
 		var ratios:Array = [0,255];
 		var matrix:Object = { matrixType:"box", x:x, y:y, w:width, h:height, r:(180/180)*Math.PI };
 		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
@@ -47,12 +47,24 @@
 		var h:Number = height;
 		
 		//this.beginFill(this.shine_colour, 100);
-		mc.moveTo(x+rad, y);
-		mc.lineTo(x+w, y);
-		mc.lineTo(x+w, y+h);
-		mc.lineTo(x+rad, y+h);
-		mc.curveTo(x, y+h, x, y+h-rad);
-		mc.lineTo(x, y+rad);
+		if( h>0 )
+		{
+			mc.moveTo(x+rad, y);
+			mc.lineTo(x+w, y);
+			mc.lineTo(x+w, y+h);
+			mc.lineTo(x+rad, y+h);
+			mc.curveTo(x, y+h, x, y+h-rad);
+			mc.lineTo(x, y+rad);
+		}
+		else
+		{
+			mc.moveTo(x+rad, y);
+			mc.lineTo(x+w, y);
+			mc.lineTo(x+w, y+h);
+			mc.lineTo(x+rad, y+h);
+			mc.curveTo(x, y-h, x, y-h-rad);
+			mc.lineTo(x, y-rad);
+		}
 		mc.endFill();
 
 	}
@@ -68,13 +80,29 @@
 		
 		mc.lineStyle(0, this.outline_colour, 100);
 		mc.beginFill(this.colour, 100);
-		mc.moveTo(0+rad, 0);
-		mc.lineTo(w-rad, 0);
-		mc.curveTo(w, 0, w, rad);
-		mc.lineTo(w, h);
-		mc.lineTo(0, h);
-		mc.lineTo(0, 0+rad);
-		mc.curveTo(0, 0, 0+rad, 0);
+		
+		if( h>0 )
+		{
+			// bar goes up
+			mc.moveTo(0+rad, 0);
+			mc.lineTo(w-rad, 0);
+			mc.curveTo(w, 0, w, rad);
+			mc.lineTo(w, h);
+			mc.lineTo(0, h);
+			mc.lineTo(0, 0+rad);
+			mc.curveTo(0, 0, 0+rad, 0);
+		}
+		else
+		{
+			// bar goes down
+			mc.moveTo(0+rad, 0);
+			mc.lineTo(w-rad, 0);
+			mc.curveTo(w, 0, w, -rad);
+			mc.lineTo(w, h);
+			mc.lineTo(0, h);
+			mc.lineTo(0, 0-rad);
+			mc.curveTo(0, 0, 0+rad, 0);
+		}
 		mc.endFill();
 		mc._x = x;
 		mc._y = y;
@@ -85,6 +113,10 @@
 		var mc:MovieClip = this.bar_mcs[i];
 		
 		mc.clear();
+		
+		if( val == null )
+			return;
+			
 		this.bg( mc, val );
 		this.glass( mc, val );
 

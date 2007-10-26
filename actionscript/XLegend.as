@@ -36,6 +36,7 @@
 		var fmt:TextFormat = new TextFormat();
 		fmt.color = this.colour;
 		fmt.font = "Verdana";
+		
 		fmt.size = this.size;
 		
 		fmt.align = "center";

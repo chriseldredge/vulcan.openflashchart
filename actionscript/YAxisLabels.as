@@ -34,8 +34,9 @@
 		var count:Number = 0;
 		for( var i:Number=min; i<=max; i+=every )
 		{
+			var title:String = _root.format_y_axis_label(i);
 			var tmp = {
-				textfield: this.yAxisLabel( i, name+String(count++), y_label_style, nr ),
+				textfield: this.yAxisLabel( title, name+String(count++), y_label_style, nr ),
 				value: i
 				};
 			this.labels.push( tmp );
@@ -44,7 +45,7 @@
 
 	
 	
-	function yAxisLabel( title:Number, name:String, y_label_style:YLabelStyle )
+	function yAxisLabel( title:String, name:String, y_label_style:YLabelStyle )
 	{
 		// does _root already have this textFiled defined?
 		// this happens when we do an AJAX reload()
@@ -57,7 +58,7 @@
 		//var mc:MovieClip = _root.createEmptyMovieClip( name, _root.getNextHighestDepth() );
 		var tf:TextField = _root.createTextField(name, _root.getNextHighestDepth(), 0, 0, 100, 100);
 		//tf.border = true;
-		tf.text = _root.format(title);
+		tf.text = title;
 		var fmt:TextFormat = new TextFormat();
 		fmt.color = y_label_style.colour;
 		fmt.font = "Verdana";

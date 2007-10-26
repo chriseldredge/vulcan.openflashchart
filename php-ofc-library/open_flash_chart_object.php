@@ -1,7 +1,23 @@
 <?
-function open_flash_chart_object( $width, $height, $url, $use_swfobject=true )
+function open_flash_chart_object_str( $width, $height, $url, $use_swfobject=true, $base='' )
 {
-	//
+    //
+    // return the HTML as a string
+    //
+    return _ofc( $width, $height, $url, $use_swfobject, $base );
+}
+
+function open_flash_chart_object( $width, $height, $url, $use_swfobject=true, $base='' )
+{
+    //
+    // stream the HTML into the page
+    //
+    echo _ofc( $width, $height, $url, $use_swfobject, $base );
+}
+
+function _ofc( $width, $height, $url, $use_swfobject, $base )
+{
+    //
     // I think we may use swfobject for all browsers,
     // not JUST for IE...
     //
@@ -11,6 +27,30 @@ function open_flash_chart_object( $width, $height, $url, $use_swfobject=true )
     // escape the & and stuff:
     //
     $url = urlencode($url);
+    
+    //
+    // output buffer
+    //
+    $out = array();
+    
+    //
+    // check for http or https:
+    //
+    if (isset ($_SERVER['HTTPS']))
+    {
+        if (strtoupper ($_SERVER['HTTPS']) == 'ON')
+        {
+            $protocol = 'https';
+        }
+        else
+        {
+            $protocol = 'http';
+        }
+    }
+    else
+    {
+        $protocol = 'http';
+    }
     
     //
     // if there are more than one charts on the
@@ -23,7 +63,7 @@ function open_flash_chart_object( $width, $height, $url, $use_swfobject=true )
     if( !isset( $open_flash_chart_seqno ) )
     {
         $open_flash_chart_seqno = 1;
-        echo '<script type="text/javascript" src="js/swfobject.js"></script>';
+        $out[] = '<script type="text/javascript" src="'. $base .'js/swfobject.js"></script>';
     }
     else
     {
@@ -32,35 +72,35 @@ function open_flash_chart_object( $width, $height, $url, $use_swfobject=true )
         $div_name .= '_'. $open_flash_chart_seqno;
     }
     
-	if( $use_swfobject )
+    if( $use_swfobject )
     {
-		// Using library for auto-enabling Flash object on IE, disabled-Javascript proof
-	    
-        echo '<div id="'. $div_name .'"></div>';
-    	
-		echo '<script type="text/javascript">';
-		echo 'var so = new SWFObject("open-flash-chart.swf", "ofc", "'. $width . '", "' . $height . '", "9", "#FFFFFF");';
-		echo 'so.addVariable("width", "' . $width . '");';
-		echo 'so.addVariable("height", "' . $height . '");';
-		echo 'so.addVariable("data", "'. $url . '");';
-		echo 'so.addParam("allowScriptAccess", "sameDomain");';
-		echo 'so.write("'. $div_name .'");';
-		echo '</script>';
-		echo '<noscript>';
-	}
+	// Using library for auto-enabling Flash object on IE, disabled-Javascript proof  
+        $out[] = '<div id="'. $div_name .'"></div>';
+	$out[] = '<script type="text/javascript">';
+	$out[] = 'var so = new SWFObject("'. $base .'open-flash-chart.swf", "ofc", "'. $width . '", "' . $height . '", "9", "#FFFFFF");';
+	$out[] = 'so.addVariable("width", "' . $width . '");';
+	$out[] = 'so.addVariable("height", "' . $height . '");';
+	$out[] = 'so.addVariable("data", "'. $url . '");';
+	$out[] = 'so.addParam("allowScriptAccess", "sameDomain");';
+	$out[] = 'so.write("'. $div_name .'");';
+	$out[] = '</script>';
+	$out[] = '<noscript>';
+    }
 
-	echo '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="http://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" ';
-    echo 'width="' . $width . '" height="' . $height . '" id="ie_'. $obj_id .'" align="middle">';
-	echo '<param name="allowScriptAccess" value="sameDomain" />';
-	echo '<param name="movie" value="open-flash-chart.swf?width='. $width .'&height='. $height . '&data='. $url .'" />';
-    echo '<param name="quality" value="high" />';
-    echo '<param name="bgcolor" value="#FFFFFF" />';
-	echo '<embed src="open-flash-chart.swf?data=' . $url .'" quality="high" bgcolor="#FFFFFF" width="'. $width .'" height="'. $height .'" name="open-flash-chart" align="middle" allowScriptAccess="sameDomain" ';
-    echo 'type="application/x-shockwave-flash" pluginspage="http://www.macromedia.com/go/getflashplayer" id="'. $obj_id .'"/>';
-	echo '</object>';
+    $out[] = '<object classid="clsid:d27cdb6e-ae6d-11cf-96b8-444553540000" codebase="' . $protocol . '://fpdownload.macromedia.com/pub/shockwave/cabs/flash/swflash.cab#version=8,0,0,0" ';
+    $out[] = 'width="' . $width . '" height="' . $height . '" id="ie_'. $obj_id .'" align="middle">';
+    $out[] = '<param name="allowScriptAccess" value="sameDomain" />';
+    $out[] = '<param name="movie" value="'. $base .'open-flash-chart.swf?width='. $width .'&height='. $height . '&data='. $url .'" />';
+    $out[] = '<param name="quality" value="high" />';
+    $out[] = '<param name="bgcolor" value="#FFFFFF" />';
+    $out[] = '<embed src="'. $base .'open-flash-chart.swf?data=' . $url .'" quality="high" bgcolor="#FFFFFF" width="'. $width .'" height="'. $height .'" name="open-flash-chart" align="middle" allowScriptAccess="sameDomain" ';
+    $out[] = 'type="application/x-shockwave-flash" pluginspage="' . $protocol . '://www.macromedia.com/go/getflashplayer" id="'. $obj_id .'"/>';
+    $out[] = '</object>';
 
-	if ( $use_swfobject ) {
-		echo '</noscript>';
-	}
+    if ( $use_swfobject ) {
+	$out[] = '</noscript>';
+    }
+    
+    return implode("\n",$out);
 }
 ?>

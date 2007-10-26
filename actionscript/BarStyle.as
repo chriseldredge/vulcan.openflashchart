@@ -63,18 +63,24 @@
 		
 		for( var i:Number=0; i < this.values.length; i++)
 		{
-			
-			var tmp:Point = b.make_point_bar( i, Number(this.values[i]), right_axis, bar, bar_count );
-			
-			tmp.make_tooltip(
-				_root.get_tooltip_string(),
-				this.key,
-				Number(this.values[i]),
-				_root.get_x_legend(),
-				_root.get_x_axis_label(i)
-				);
+			if( this.values[i] != 'null' )
+			{
+				var tmp:Point = b.make_point_bar( i, Number(this.values[i]), right_axis, bar, bar_count );
 				
-			this.ExPoints.push( tmp );
+				tmp.make_tooltip(
+					_root.get_tooltip_string(),
+					this.key,
+					Number(this.values[i]),
+					_root.get_x_legend(),
+					_root.get_x_axis_label(i)
+					);
+					
+				this.ExPoints.push( tmp );
+			}
+			else
+			{
+				this.ExPoints.push( null );
+			}
 		}
 	}
 	
