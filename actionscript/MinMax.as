@@ -27,6 +27,16 @@
 			this.y2_min = 0;
 		else
 			this.y2_min = Number(lv.y2_min)
+			
+		//
+		// what do you do if Y min=0 and Y max = 0?
+		//
+		if( this.y_min == this.y_max )
+			this.y_max+=1;
+		
+		if( this.y2_min == this.y2_max )
+			this.y2_max+=1;
+			
 	}
 	
 	function range( right:Boolean )

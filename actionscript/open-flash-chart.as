@@ -208,6 +208,19 @@ function get_x_axis_label( i:Number )
 	return _root._x_axis_labels.get( i );
 }
 
+function format_y_axis_label( val:Number )
+{
+	if( _root._y_format != undefined )
+	{
+		var tmp:String = _root._y_format.replace('#val#',_root.format(val));
+		tmp = tmp.replace('#val:time#',_root.formatTime(val));
+		tmp = tmp.replace('#val:none#',String(val));
+		return tmp;
+	}
+	else
+		return _root.format(val);
+}
+
 function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 {
 	if( ( _root.tooltip != undefined ) )
@@ -463,6 +476,11 @@ function make_chart()
 
 	_root._y_ticks = new YTicks( this );
 	
+	// format the Y Axis numbers
+	_root._y_format = null;
+	if( this.y_format != undefined )
+		_root._y_format = this.y_format;
+		
 	_root._y_axis_labels = new YAxisLabels(
 		y_label_style,
 		_root._min_max.y_min,
@@ -483,6 +501,7 @@ function make_chart()
 			this
 			);
 	}
+	
 
 	_root._y_axis = new YAxis(
 		_root._y_ticks,
@@ -827,7 +846,7 @@ if( _root.data == undefined )
 		//
 		// We are in the IDE
 		//
-		_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-29.txt";
+		_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-17.txt";
 		//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 		lv.load(_root.data);
 	}
