@@ -34,7 +34,7 @@
 		
 		//set gradient fill
 		var colors:Array = [0xFFFFFF,0xFFFFFF];
-		var alphas:Array = [100, 100];//[30, 70];
+		var alphas:Array = [30, 70];
 		var ratios:Array = [0,255];
 		var matrix:Object = { matrixType:"box", x:x, y:y, w:width, h:height, r:(180/180)*Math.PI };
 		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);

@@ -60,6 +60,8 @@ function _ofc( $width, $height, $url, $use_swfobject, $base )
     $obj_id = 'chart';
     $div_name = 'flashcontent';
     
+    $out[] = '<script type="text/javascript" src="'. $base .'js/ofc.js"></script>';
+    
     if( !isset( $open_flash_chart_seqno ) )
     {
         $open_flash_chart_seqno = 1;
@@ -75,9 +77,9 @@ function _ofc( $width, $height, $url, $use_swfobject, $base )
     if( $use_swfobject )
     {
 	// Using library for auto-enabling Flash object on IE, disabled-Javascript proof  
-        $out[] = '<div id="'. $div_name .'"></div>';
+        $out[] = '<div id="'. $div_name .'" onmouseout="onrollout();"></div>';
 	$out[] = '<script type="text/javascript">';
-	$out[] = 'var so = new SWFObject("'. $base .'open-flash-chart.swf", "ofc", "'. $width . '", "' . $height . '", "9", "#FFFFFF");';
+	$out[] = 'var so = new SWFObject("'. $base .'open-flash-chart.swf", "'. $obj_id .'", "'. $width . '", "' . $height . '", "9", "#FFFFFF");';
 	$out[] = 'so.addVariable("width", "' . $width . '");';
 	$out[] = 'so.addVariable("height", "' . $height . '");';
 	$out[] = 'so.addVariable("data", "'. $url . '");';
@@ -93,7 +95,7 @@ function _ofc( $width, $height, $url, $use_swfobject, $base )
     $out[] = '<param name="movie" value="'. $base .'open-flash-chart.swf?width='. $width .'&height='. $height . '&data='. $url .'" />';
     $out[] = '<param name="quality" value="high" />';
     $out[] = '<param name="bgcolor" value="#FFFFFF" />';
-    $out[] = '<embed src="'. $base .'open-flash-chart.swf?data=' . $url .'" quality="high" bgcolor="#FFFFFF" width="'. $width .'" height="'. $height .'" name="open-flash-chart" align="middle" allowScriptAccess="sameDomain" ';
+    $out[] = '<embed src="'. $base .'open-flash-chart.swf?data=' . $url .'" quality="high" bgcolor="#FFFFFF" width="'. $width .'" height="'. $height .'" name="'. $obj_id .'" align="middle" allowScriptAccess="sameDomain" ';
     $out[] = 'type="application/x-shockwave-flash" pluginspage="' . $protocol . '://www.macromedia.com/go/getflashplayer" id="'. $obj_id .'"/>';
     $out[] = '</object>';
 
