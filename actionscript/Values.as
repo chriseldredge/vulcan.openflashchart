@@ -189,4 +189,17 @@
 		}
 
 	}
+	
+	//
+	// tell all out lines and bars that the mouse has moved and
+	// some will need to Fade In and some Fade Out
+	//
+	public function mouse_move( x:Number, y:Number )
+	{
+		for( var i:Number=0; i < this.styles.length; i++)
+		{
+			if( this.styles[i].is_over( x, y ) )
+				this.styles[i].fade_in();
+		}
+	}
 }

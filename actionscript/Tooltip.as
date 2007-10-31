@@ -1,4 +1,5 @@
 ﻿import mx.transitions.Tween;
+import mx.transitions.easing.*;
 
 class Tooltip
 {
@@ -8,7 +9,7 @@ class Tooltip
 	
 	private var x:Number;
 	private var y:Number;
-	private var myTween:Tween;
+	//private var myTween:Tween;
 	
 	public function Tooltip()
 	{
@@ -16,18 +17,6 @@ class Tooltip
 		this.mc.rect2( 0, 0, 10, 10, 0, 50 );
 		this.mc._visible = false;
 		
-		//
-		// HACK!!
-		// This is an invisible MovieClip that is on top of all
-		// MovieClips, all it does is detect if the mouse has left
-		// the flash movie (.swf) and remove the tooltip
-		/*
-		this.mc2 = _root.createEmptyMovieClip( "tooltipX_mouse_out", _root.getNextHighestDepth() );
-		this.mc2.rect2( 0, 0, Stage.width, Stage.height, 0, 0 );
-		this.mc2._tooltip = this;
-		this.mc2.onRollOut = function() { this._tooltip.hide(); };
-		this.mc2.useHandCursor = false;
-		*/
 		// create the title:
 		this.mc.createTextField( "txt_title", this.mc.getNextHighestDepth(), 5, 5, 100, 100);
 		
@@ -55,22 +44,15 @@ class Tooltip
 		var pos:Object = p.get_tip_pos();
 		
 		if( this.mc._visible && ( this.x == pos.x ) && ( this.y == pos.y ) )
-			return;
+			return;	// <-- not a new tooltip, do nothing
 		
 		this.x = pos.x;
 		this.y = pos.y;
 
 		this.mc.clear();
-		/*
-		if( !this.myTween.finish )
-		{
-			trace('stop');
-			this.myTween.stop();
-		}
-			
-		this.myTween = new Tween( this.mc, "_x", mx.transitions.easing.Regular.easeOut, this.mc._x, x, 10, false );
-		*/
 		
+		var old_x:Number = this.mc._x;
+		var old_y:Number = this.mc._y;
 		
 		this.mc._x = pos.x;
 		this.mc._y = pos.y-20;
@@ -125,9 +107,22 @@ class Tooltip
 			ccolor);
 
 		this.mc._visible = true;
+		var t:Tween = new Tween( this.mc, "_x", Strong.easeOut, old_x, this.mc._x, 10, false );
+		var u:Tween = new Tween( this.mc, "_y", Strong.easeOut, old_y, this.mc._y, 10, false );
 	}
 	
 	public function hide()
+	{
+		//this.myTween = new Tween( this.mc, "_alpha", mx.transitions.easing.Regular.easeOut, this.mc._x, x, 10, false );
+		var t:Tween = new Tween( this.mc, "_alpha", Regular.easeOut, 100, 0, 20, false);
+		var tmp = this;
+		t.onMotionFinished = function() {
+			tmp.mc._visible = false;
+			tmp.mc._alpha = 100;
+		};
+	}
+	
+	public function hide__()
 	{
 		this.mc.onEnterFrame = function ()
 		{

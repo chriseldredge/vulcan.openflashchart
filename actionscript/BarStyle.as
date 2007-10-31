@@ -1,4 +1,7 @@
-﻿class BarStyle extends Style
+﻿import mx.transitions.Tween;
+import mx.transitions.easing.*;
+
+class BarStyle extends Style
 {
 	public var is_bar:Boolean = true;
 	
@@ -43,6 +46,8 @@
 			mc.onRollOver = _root.FadeIn2;
 			mc.onRollOut = _root.FadeOut;
 			
+			mc._is_over = false;
+			
 			//mc.onRollOver = ChartUtil.glowIn;
 			
 			// this is used in FadeIn and FadeOut
@@ -54,6 +59,40 @@
 			this.bar_mcs[i] = mc;
 		}
 			
+	}
+	
+	public function fade_in()
+	{
+		//this._alpha = 100;
+	}
+	
+	public function fade_out()
+	{
+		//this._alpha = this._alpha_original;
+	}
+	
+	public function is_over( x:Number, y:Number )
+	{
+		for( var i:Number=0; i < this.bar_mcs.length; i++ )
+		{
+			var tmp:MovieClip = this.bar_mcs[i];
+			if( tmp.hitTest(x,y) )
+			{
+				if( !tmp._is_over )
+				{
+					tmp._is_over = true;
+					var t:Tween = new Tween(this.bar_mcs[i], "_alpha", Elastic.easeOut, this.bar_mcs[i]._alpha_original, 100, 60, false);
+				}
+			}
+			else
+			{
+				if( tmp._is_over )
+				{
+					tmp._is_over = false;
+					var t:Tween = new Tween(this.bar_mcs[i], "_alpha", Elastic.easeOut, 100, this.bar_mcs[i]._alpha_original, 60, false);
+				}
+			}
+		}
 	}
 	
 
