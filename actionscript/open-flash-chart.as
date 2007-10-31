@@ -327,10 +327,31 @@ function show_tip( owner:Object, x:Number, y:Number, tip_obj:Object )
 
 }
 
-_root.onMouseMove = function()
+function mouse_over( ok:Boolean )
+{
+	var x:Number = _root._xmouse;
+	var y:Number = _root._ymouse;
+	
+	if( !ok )
+	{
+		// tell everyone that the mouse is NOT over them
+		x = -1;
+		y = -1;
+	}
+
+	_root.chartValues.mouse_move( x, y );
+}
+
+//_root.onMouseMove = function()
+function mouse_move()
 {
 	if( _root.chartValues == undefined )
 		return;
+	
+	if( !_root.mc2.hitTest(_root._xmouse, _root._ymouse) )
+		return;
+	
+	mouse_over( true );
 	
 	var tmp:Array = [];
 	var style:Style = null;
@@ -523,11 +544,6 @@ function make_chart()
 			2
 			);
 	}
-
-	//_root.mc2 = _root.createEmptyMovieClip( "tooltipX_mouse_out", _root.getNextHighestDepth() );
-	//_root.mc2.rect2( 0, 0, Stage.width, Stage.height, 0, 0 );
-	//_root.mc2.onRollOut = function() { this._tooltip.hide(); };
-	//_root.mc2.useHandCursor = false;
 	
 	// The chart values are defined last and are on TOP of every thing else
 	_root.chartValues = new Values( this, _root._background.colour, _root._x_axis_labels.labels );
@@ -542,6 +558,22 @@ function make_chart()
 
 	// this is last and floats over everything!
 	_root.tooltip_x = new Tooltip();
+	
+	//
+	// HACK!!
+	// This is an invisible MovieClip that is on top of all
+	// MovieClips, all it does is detect if the mouse has left
+	// the flash movie (.swf) and remove the tooltip
+	//
+	_root.mc2 = _root.createEmptyMovieClip( "tooltipX_mouse_out", _root.getNextHighestDepth() );
+	//_root.mc2.rect2( 0, 0, Stage.width, Stage.height, 0, 0 );
+	_root.mc2.onRollOut = function() {
+		_root.mouse_over( false );		// <-- tell every item we are NOT over it
+		_root.tooltip_x.hide();
+		};
+	_root.mc2.onMouseMove = _root.mouse_move;
+	//_root.mc2.onMouseMove = function(){ trace( _root.mc2.hitTest(_root._xmouse, _root._ymouse ) ); };
+	_root.mc2.useHandCursor = false;
 	
 	//_root.mc2._tooltip = _root.tooltip_x;
 }
@@ -687,6 +719,11 @@ function move()
 		_root._min_max.y2_min,
 		_root._min_max.y2_max
 		);
+	
+	_root.mc2.clear();
+	_root.mc2.rect2( 0, 0, b.width, b.height, 0, 50 );
+	_root.mc2._x = b.left;
+	_root.mc2._y = b.top;
 }
 
 //
@@ -737,11 +774,15 @@ function hide_message():Void
 	hide_oops();
 }
 
+/*
+
 ExternalInterface.addCallback("rollout", null, rollout);
 function rollout():Void
 {
 	_root.tooltip_x.hide();
 }
+
+*/
 
 ExternalInterface.addCallback("reload", null, reload);
 function reload( u:String ):Void

@@ -9,6 +9,12 @@ function onrollout()
   x = tmp.rollout();
 }
 
+function onrollout2()
+{
+  tmp = findSWF("ofc");
+  x = tmp.rollout();
+}
+
 function findSWF(movieName) {
   if (navigator.appName.indexOf("Microsoft")!= -1) {
     return window[movieName];
@@ -24,7 +30,7 @@ function findSWF(movieName) {
     
 <script type="text/javascript" src="../js/swfobject.js"></script>
 
-<div id="my_chart" style="padding: 0px; margin:10px; border: 1px solid lightblue; width: 250px; height: 200px;" onmouseout="onrollout();"></div>
+<div id="my_chart" style="padding: 0px; margin:10px; border: 1px solid lightblue; width: 250px; height: 200px;" onmouseout="__onrollout();"></div>
  	
 <script type="text/javascript">
 var so = new SWFObject("../actionscript/open-flash-chart.swf", "ofc", "250", "200", "9", "#FFFFFF");
@@ -43,7 +49,7 @@ so.addVariable("y_max","20");
 
 
 so.addParam("allowScriptAccess", "always" );//"sameDomain");
-//so.addParam("onmouseout", "onrollout();" );
+so.addParam("onmouseout", "onrollout2();" );
 so.write("my_chart");
 </script>
 

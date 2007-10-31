@@ -30,7 +30,15 @@
 		var x:Number = 3;
 		var y:Number = x;
 		var width:Number = (val.width/2)-x;
-		var height:Number = val.bar_bottom-val.y-y-1;
+		var height:Number = val.bar_bottom-val.y;
+		
+		if( height>0 )
+			height -= 4;
+		else
+		{
+			height += 4;
+			y = -y;
+		}
 		
 		//set gradient fill
 		var colors:Array = [0xFFFFFF,0xFFFFFF];
@@ -58,12 +66,12 @@
 		}
 		else
 		{
-			mc.moveTo(x+rad, y);
-			mc.lineTo(x+w, y);
-			mc.lineTo(x+w, y+h);
-			mc.lineTo(x+rad, y+h);
-			mc.curveTo(x, y-h, x, y-h-rad);
-			mc.lineTo(x, y-rad);
+			mc.moveTo(x+rad, y);	// <-- bottom left
+			mc.lineTo(x+w, y);		// bottom right
+			mc.lineTo(x+w, y+h);	// top right
+			mc.lineTo(x, y+h);		// top left
+			mc.lineTo(x, y-rad);	// bottom left
+			//mc.curveTo(x, y, x+rad, y);
 		}
 		mc.endFill();
 
