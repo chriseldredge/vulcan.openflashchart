@@ -566,16 +566,13 @@ function make_chart()
 	// the flash movie (.swf) and remove the tooltip
 	//
 	_root.mc2 = _root.createEmptyMovieClip( "tooltipX_mouse_out", _root.getNextHighestDepth() );
-	//_root.mc2.rect2( 0, 0, Stage.width, Stage.height, 0, 0 );
 	_root.mc2.onRollOut = function() {
 		_root.mouse_over( false );		// <-- tell every item we are NOT over it
 		_root.tooltip_x.hide();
 		};
 	_root.mc2.onMouseMove = _root.mouse_move;
-	//_root.mc2.onMouseMove = function(){ trace( _root.mc2.hitTest(_root._xmouse, _root._ymouse ) ); };
 	_root.mc2.useHandCursor = false;
 	
-	//_root.mc2._tooltip = _root.tooltip_x;
 }
 
 function LoadVarsOnLoad( success )
@@ -721,7 +718,7 @@ function move()
 		);
 	
 	_root.mc2.clear();
-	_root.mc2.rect2( 0, 0, b.width, b.height, 0, 50 );
+	_root.mc2.rect2( 0, 0, b.width, b.height, 0, 0 );	// <-- set alpha to 50 for debug!
 	_root.mc2._x = b.left;
 	_root.mc2._y = b.top;
 }
@@ -887,7 +884,7 @@ if( _root.data == undefined )
 		//
 		// We are in the IDE
 		//
-		_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-10.txt";
+		_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-31.txt";
 		//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 		lv.load(_root.data);
 	}
