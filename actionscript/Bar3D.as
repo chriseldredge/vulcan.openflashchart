@@ -12,9 +12,8 @@
 	{
 		//
 		var w:Number = val.width;
-		//var rad:Number = 7;
+		var h:Number = val.bar_bottom-val.y;
 		
-//		mc.lineStyle(0, this.outline_colour, 100);
 		mc.lineStyle(0, this.outline_colour, 0);
 		//set gradient fill
 		
@@ -27,11 +26,14 @@
 		mc.beginGradientFill("linear", colors, alphas, ratios, matrix);
 		
 		
-		//mc.beginFill(this.colour, 100);
-		mc.moveTo(0, 0);
-		mc.lineTo(w, 0);
-		mc.lineTo(w-12, 12);
-		mc.lineTo(-12, 12);
+		var y:Number = 0;
+		if( h<0 )
+			y = h;
+		
+		mc.moveTo(0, y);
+		mc.lineTo(w, y);
+		mc.lineTo(w-12, y+12);
+		mc.lineTo(-12, y+12);
 		mc.endFill();
 		mc._x = val.x;
 		mc._y = val.y;
