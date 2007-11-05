@@ -41,11 +41,12 @@ class NumberUtils {
 				
 			s=x.substr(c,1)+s;
 		}
-		if( num[1] != undefined )
+		if( num[1] != undefined ) {
 			if (isFixedNumDecimalsForced){
 				num[1] += "0000000000";
 			}
 			s += '.'+ num[1].substr(0,numDecimals);
+		}
 			
 		if( i<0 )
 			s = '-'+s;
