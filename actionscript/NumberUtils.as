@@ -26,7 +26,7 @@ class NumberUtils {
 		else
 			var num:Array = String(i).split('.');
 		
-		trace ("a: " + num[0] + ":" + num[1]);
+		//trace ("a: " + num[0] + ":" + num[1]);
 		var x:String = num[0];
 		var pos:Number=0;
 		var c:Number=0;
