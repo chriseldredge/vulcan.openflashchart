@@ -348,7 +348,7 @@ function mouse_move()
 	if( _root.chartValues == undefined )
 		return;
 	
-	if( !_root.mc2.hitTest(_root._xmouse, _root._ymouse) )
+	if( !_root._inv.hitTest(_root._xmouse, _root._ymouse) )
 		return;
 	
 	mouse_over( true );
@@ -443,7 +443,7 @@ function oops( text:String )
 
 function make_pie()
 {
-	_root._pie = new PieStyle( this, 'pie' );//!=undefined ? lv['values'] : "", lv['links']);
+	_root._pie = new PieStyle( this, 'pie' );
 	_root._title = new Title( this );
 }
 
@@ -482,7 +482,7 @@ function make_chart()
 		
 	
 	// create X labels and measure the height:	
-	_root._x_axis_labels = new XAxisLabels( this, x_label_style );
+	_root._x_axis_labels = new XAxisLabels( this, x_label_style, _root._min_max );
 
 	var xSteps = 1;
 	if( this.x_axis_steps != undefined )
@@ -549,7 +549,7 @@ function make_chart()
 	_root.chartValues = new Values( this, _root._background.colour, _root._x_axis_labels.labels );
 	
 	// tell the x axis where the grid lines are:
-	_root._x_axis.set_grid_count( _root.chartValues.length() );
+	_root._x_axis.set_grid_count( _root._x_axis_labels.count() );
 	
 	_root._keys = new Keys(
 		(_root._y_legend.width()+_root._y_axis_labels.width()+_root._y_axis.width()),		// <-- from left
@@ -565,13 +565,7 @@ function make_chart()
 	// MovieClips, all it does is detect if the mouse has left
 	// the flash movie (.swf) and remove the tooltip
 	//
-	_root.mc2 = _root.createEmptyMovieClip( "tooltipX_mouse_out", _root.getNextHighestDepth() );
-	_root.mc2.onRollOut = function() {
-		_root.mouse_over( false );		// <-- tell every item we are NOT over it
-		_root.tooltip_x.hide();
-		};
-	_root.mc2.onMouseMove = _root.mouse_move;
-	_root.mc2.useHandCursor = false;
+	_root._inv = new Invisible();
 	
 }
 
@@ -636,7 +630,7 @@ function move()
 	{
 		_root._background.move();
 		_root._title.move();
-		_root._pie.draw();
+		_root._pie.draw( _root._title.height() );
 		return;
 	}
 	
@@ -669,7 +663,8 @@ function move()
 		_root._min_max,					// <-- scale everything between min/max
 		_root._x_axis_labels.first_label_width(),
 		_root._x_axis_labels.last_label_width(),
-		 _root.chartValues.length(),
+		//_root.chartValues.length(),
+		_root._x_axis_labels.count(),
 		jiggle,
 		_root._x_axis.three_d
 		);
@@ -701,7 +696,6 @@ function move()
 	// move x labels
 	_root._x_axis_labels.move(
 		Stage.height-(_root._x_legend.height()+_root._x_axis_labels.height()),	// <-- up from the bottom
-		_root.chartValues.styles[0].values.length,
 		b );
 	
 	_root._y_axis.move( b , 1);
@@ -717,10 +711,8 @@ function move()
 		_root._min_max.y2_max
 		);
 	
-	_root.mc2.clear();
-	_root.mc2.rect2( 0, 0, b.width, b.height, 0, 0 );	// <-- set alpha to 50 for debug!
-	_root.mc2._x = b.left;
-	_root.mc2._y = b.top;
+	_root._inv.move( b );
+	
 }
 
 //
@@ -884,7 +876,7 @@ if( _root.data == undefined )
 		//
 		// We are in the IDE
 		//
-		_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-31.txt";
+		_root.data="C:\\Users\\John\\Documents\\flash\\svn\\data-files\\data-16.txt";
 		//_root.data="http://www.stelteronline.de/index.php?option=com_joomleague&func=showStats_GetChartData&p=1";
 		lv.load(_root.data);
 	}

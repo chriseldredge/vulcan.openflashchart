@@ -121,7 +121,7 @@ class Tooltip
 			tmp.mc._alpha = 100;
 		};
 	}
-	
+/*
 	public function hide__()
 	{
 		this.mc.onEnterFrame = function ()
@@ -135,4 +135,5 @@ class Tooltip
 			}
 		};
 	}
+*/
 }

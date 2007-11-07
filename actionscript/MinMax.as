@@ -1,9 +1,11 @@
 ﻿class MinMax
 {
-	public var y_min:Number=0;
-	public var y_max:Number=0;
-	public var y2_min:Number=0;
-	public var y2_max:Number=0;
+	public var y_min:Number;
+	public var y_max:Number;
+	public var y2_min:Number;
+	public var y2_max:Number;
+	public var x_min:Number;
+	public var x_max:Number;
 	
 	function MinMax( lv:LoadVars )
 	{
@@ -36,7 +38,16 @@
 		
 		if( this.y2_min == this.y2_max )
 			this.y2_max+=1;
+		
+		if( lv.x_max == undefined )
+			this.x_max = 10;
+		else
+			this.x_max = Number(lv.x_max)
 			
+		if( lv.x_min == undefined )
+			this.x_min = 0;
+		else
+			this.x_min = Number(lv.x_min)
 	}
 	
 	function range( right:Boolean )

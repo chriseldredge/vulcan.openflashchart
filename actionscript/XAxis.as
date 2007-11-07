@@ -34,7 +34,7 @@
 		else
 			this.three_d = false;
 
-		// Path from Will Henry
+		// Patch from Will Henry
 		var style:Array = lv.x_label_style.split(',');
 		if( style.length > 4 )
 		{
@@ -175,8 +175,11 @@
 		this.mc.lineStyle(2,this.axis_colour,100);
 		for( var i:Number=0; i < this.grid_count; i+=this.x_steps )
 		{
-			this.mc.moveTo(left + (i*item_width),box.bottom);
-			this.mc.lineTo(left + (i*item_width),box.bottom+this.tick);
+			var pos:Number = box.get_x_tick_pos(i);
+			this.mc.moveTo( pos, box.bottom );
+			this.mc.lineTo( pos, box.bottom+this.tick );
+			//this.mc.moveTo(left + (i*item_width),box.bottom);
+			//this.mc.lineTo(left + (i*item_width),box.bottom+this.tick);
 		}
 		
 		// Axis line:

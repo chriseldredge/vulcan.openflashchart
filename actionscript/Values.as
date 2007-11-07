@@ -21,6 +21,8 @@
 				//
 				if( lv['candle'+name] != undefined )
 					this.styles[c-1].set_values( lv['values'+name], labels, lv['links'+name] );
+				else if( lv['scatter'+name] != undefined )
+					this.styles[c-1].set_values( lv['values'+name] );
 				else
 					this.styles[c-1].set_values( this.parseVal( lv['values'+name] ) );
 			}
@@ -61,6 +63,8 @@
 			return new PieStyle(lv['pie'+name], lv.x_labels!=undefined ? lv['values'] : "", lv['links']);
 		else if( lv['candle'+name] != undefined )
 			return new CandleStyle(lv['candle'+name],'bar_'+c);
+		else if( lv['scatter'+name] != undefined )
+			return new Scatter(lv['scatter'+name],bgColour,'bar_'+c);
 	}
 	
 	private function parseVal( val:String ):Array
@@ -118,76 +122,38 @@
 	// get x, y co-ords of vals
 	function move( b:Box, min:Number, max:Number, min2:Number, max2:Number )
 	{
-		// If we have a second y-axel
-		if( 1==0 )//_root.lv.show_y2 && _root.lv.y2_lines)
-		{
-			var y2lines:Array = _root.lv.y2_lines.split(",");
-			
-			var bar_count:Number = this._count_bars();
-			var bar:Number = 0;
-			
-			for( var c:Number=0; c<this.styles.length; c++ )
-			{				
-				// If the current axel is to be drawn on y2 (defined in data values, y2_lines)
-				if( is_right(c+1) )
-				{
-					// move values.. 
-					var tickY:Number = b.height / (max2-min2);
-				}
-				else
-				{
-					var tickY:Number = b.height / (max-min);
-				}
-					
-					
-						this.styles[c].valPos( b, tickY, min2, bar_count, bar );
-						if( this.styles[c].is_bar )
-							bar++;
-			
-				// draw the bars and dots ontop of the line
-				for( var c:Number=0; c < this.styles.length; c++ )
-				{
-					this.styles[c].draw();
-				}
-			}
-			
-		}
-		else
-		{
 		
-			var bar_count:Number = this._count_bars();
-			var bar:Number = 0;
-			var y2:Boolean = false;
-			var y2lines:Array;
+		var bar_count:Number = this._count_bars();
+		var bar:Number = 0;
+		var y2:Boolean = false;
+		var y2lines:Array;
 			
-			if( _root.lv.show_y2 != undefined )
-				if( _root.lv.show_y2 != 'false' )
-					if( _root.lv.y2_lines != undefined )
-					{
-						y2 = true;
-						y2lines = _root.lv.y2_lines.split(",");
-					}
+		if( _root.lv.show_y2 != undefined )
+			if( _root.lv.show_y2 != 'false' )
+				if( _root.lv.y2_lines != undefined )
+				{
+					y2 = true;
+					y2lines = _root.lv.y2_lines.split(",");
+				}
 			
-			for( var c:Number=0; c<this.styles.length; c++ )
-			{
-				var right_axis:Boolean = false;
+		for( var c:Number=0; c<this.styles.length; c++ )
+		{
+			var right_axis:Boolean = false;
 				
-				// move values...
-				if( y2 && is_right(y2lines,c+1) )
-					right_axis = true;
+			// move values...
+			if( y2 && is_right(y2lines,c+1) )
+				right_axis = true;
 
-				this.styles[c].valPos( b, right_axis, min, bar_count, bar );
-				if( this.styles[c].is_bar )
-					bar++;
-			}
-			
-			// draw the bars and dots ontop of the line
-			for( var c:Number=0; c < this.styles.length; c++ )
-			{
-				this.styles[c].draw();
-			}
+			this.styles[c].valPos( b, right_axis, min, bar_count, bar );
+			if( this.styles[c].is_bar )
+				bar++;
 		}
-
+			
+		// draw the bars and dots ontop of the line
+		for( var c:Number=0; c < this.styles.length; c++ )
+		{
+			this.styles[c].draw();
+		}
 	}
 	
 	//

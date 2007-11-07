@@ -24,7 +24,7 @@
 
 &show_y2=true&
 &y2_axis_colour=#164166&
-&y2_label_style=10,0x164166&
+&y2_label_style=10,#FF00FF&#164166&
 &y2_lines=1&
 
 &y2_min=0&
