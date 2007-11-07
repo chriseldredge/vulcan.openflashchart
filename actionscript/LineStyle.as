@@ -169,11 +169,10 @@
 		mc._y = val.y;
 	}
 	
-	/*
-	public function add( val:String )
+	public function is_over( x:Number, y:Number )
 	{
-		this.values.push( val );
-	
+		if( x<0 )
+			this.mc2._visible = false;
 	}
-	*/
+	
 }

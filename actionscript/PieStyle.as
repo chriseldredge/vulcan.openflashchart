@@ -1,5 +1,6 @@
 ﻿import flash.external.ExternalInterface;
-
+import mx.transitions.Tween;
+import mx.transitions.easing.*;
 
 class PieStyle extends Style
 {
@@ -17,6 +18,8 @@ class PieStyle extends Style
 	
 	private var gradientFill:String = 'true'; //toggle gradients
 	private var border_width:Number = 1;
+	private var label_line:Number;
+	private var easing:Function;
 	
 	public function PieStyle( lv:LoadVars, name:String )//, links:String )
 	{
@@ -41,8 +44,12 @@ class PieStyle extends Style
 			
 		for( var i:Number=0; i<tmp.length; i++ )
 			this.colours.push( _root.get_colour( tmp[i] ) );
-			
-	
+		
+		this.label_line = 10;
+		this.easing = Elastic.easeOut;
+		this.easing = Bounce.easeOut;
+		this.easing = Strong.easeInOut;
+
 		var tmp:Array = this.parseVals( lv.values );
 		this.set_values( tmp );
 	}
@@ -121,54 +128,177 @@ class PieStyle extends Style
 		{
 			var slice_percent :Number = Number(this.values[i])*100/total; 
 			
-			this.ExPoints.push(
-				new ExPoint(
-					slice_start,					// x position of value
-					0,						// center (not applicable for a bar)
-					Number(this.values[i]), //y
-					slice_percent,//width
-					// min=-100 and max=100, use b.zero
-					// min = 10 and max = 20, use b.bottom
-					slice_start, //bar bottom
-					//ChartUtil.format(slice_percent)+"%"+"\n"+ChartUtil.format(values[i]), //tooltip
-					//_root.format(slice_percent)+"%"+"\n"+_root.format(values[i])
-					slice_percent
-					//,"#" //link
-					)
-				);
+			if( slice_percent > 0 )
+			{
+				this.ExPoints.push(
+					new ExPoint(
+						slice_start,					// x position of value
+						0,						// center (not applicable for a bar)
+						Number(this.values[i]), //y
+						slice_percent,//width
+						// min=-100 and max=100, use b.zero
+						// min = 10 and max = 20, use b.bottom
+						slice_start, //bar bottom
+						//ChartUtil.format(slice_percent)+"%"+"\n"+ChartUtil.format(values[i]), //tooltip
+						//_root.format(slice_percent)+"%"+"\n"+_root.format(values[i])
+						slice_percent
+						//,"#" //link
+						)
+					);
+			}
 				
 			slice_start += slice_percent;
 		}
 	}
 	
-	public function draw() : Void
+	public function draw( top:Number ) : Void
 	{
+		this.clear_mcs( Stage.width/2, ((Stage.height-top)/2)+top );
 		
-		//var colors_array:Array = [0xd01f3c,0x356aa0,0xC79810,0x73880A,0xD15600,0x6BBA70];
+		//radius for the pie
+		var rad:Number = (Stage.width<(Stage.height-top)) ? Stage.width/2 : (Stage.height-top)/2;
+		var labelLineSize:Number = rad+this.label_line;
 		
-		for( var i:Number=0; i < this.ExPoints.length; i++ ) {
-			//ignore non-positive values
-			if( this.ExPoints[i].bar_width > 0)
+		if( this.labels.length>0 )
+		{
+			this.init_labels();
+			
+			var tfs:Array = Array();
+			
+			// create the text field objects
+			for( var i:Number=0; i < this.ExPoints.length; i++ )
+				tfs.push( this.create_label( i, this.labels[i] ) );
+				
+			//
+			// start off with the radius at 100%, then keep shrinking it untill
+			// all the labels fit into the Stage.
+			//
+			var outside:Boolean = false;
+			
+			do
 			{
-				this.draw_slice( this.ExPoints[i], i, this.colours[i%this.colours.length], this.labels[i], this.links[i] );
-			}
+				for( var i:Number=0; i < tfs.length; i++ )
+				{
+					var angle:Number = this.ExPoints[i].bar_bottom+this.ExPoints[i].bar_width/2;
+					outside = outside || this.move_label( tfs[i], labelLineSize, this.pie_mcs[i]._x, this.pie_mcs[i]._y, angle );
+				}
+				
+				if( !outside )
+				{
+					trace( 'break' );
+					trace( rad );
+					trace('--');
+					break;
+				}
+				
+				// LOOK, here we reduce the radius:
+				rad--;
+				labelLineSize = rad+this.label_line;
+				outside = false;
+				
+			}while( true );
+			
+			
+		}
+		
+		for( var i:Number=0; i < this.ExPoints.length; i++ )
+		{
+			//this.draw_bits( rad, this.ExPoints[i], this.pie_mcs[i], , this.labels[i], this.links[i], i );
+			this.draw_slice( this.pie_mcs[i], rad, this.colours[i%this.colours.length], this.ExPoints[i].bar_width );
+			// draw the line from the slice to the label
+			if( this.labels.length>0 )
+				this.draw_label_line( this.pie_mcs[i], rad, this.label_line, this.ExPoints[i].bar_width );
+				
+			//rotate slice to appropriate place in pie
+			//pieSlice._rotation = 3.6*value.bar_bottom;
+			var t:Tween = new Tween( this.pie_mcs[i], "_rotation", this.easing, 0, 3.6*this.ExPoints[i].bar_bottom, 120, false);
 		}	
 	}
 	
-	function draw_slice( value:ExPoint, num:Number, color:Number, label:String, link:String ) : Void
+	function clear_mcs( x:Number, y:Number )
 	{
-		//radius for the pie		
-		var r1:Number = (Stage.width<Stage.height) ? Stage.width/2-60 : Stage.height/2-60;
+		for( var i:Number=0; i < this.ExPoints.length; i++ )
+		{
+			var mc:MovieClip = this.pie_mcs[i];
+			//the slice to be drawn
+			mc.clear();
+			//move slice to center
+			mc._x = x;
+			mc._y = y;
 		
-		//the slice to be drawn
-		//var pieSlice: MovieClip = _root.createEmptyMovieClip(name, _root.getNextHighestDepth());
-		var pieSlice:MovieClip = this.pie_mcs[num];
-		pieSlice.clear();
-		 
-		
+			mc._alpha = this.alpha;
+			mc._alpha_original = this.alpha;	// <-- remember our original alpha while tweening
+		}
+	}
 	
+	// draw the line from the pie slice to the label
+	function draw_label_line( pieSlice:MovieClip, rad:Number, tick_size:Number, slice_angle:Number )
+	{
+		//draw line 
+		pieSlice.lineStyle( 1, this.colour, 100 );
+		//move to center of arc
+		pieSlice.moveTo(rad*Math.cos(slice_angle/2*3.6*TO_RADIANS), rad*Math.sin(slice_angle/2*3.6*TO_RADIANS));
+
+		//final line positions
+		var lineEnd_x:Number = (rad+tick_size)*Math.cos(slice_angle/2*3.6*TO_RADIANS);
+		var lineEnd_y:Number = (rad+tick_size)*Math.sin(slice_angle/2*3.6*TO_RADIANS);
+		pieSlice.lineTo(lineEnd_x, lineEnd_y);
+	}
+	
+	function init_labels()
+	{
+		//create legend text field
+		for( var i:Number=0; i < this.ExPoints.length; i++ )
+			if( _root["pie_text_"+i] != undefined )
+				_root["pie_text_"+i].removeTextField();
+	}
+	
+	function create_label( num:Number, label:String )
+	{
+		var tf:TextField = _root.createTextField("pie_text_"+num, _root.getNextHighestDepth(), 0, 0, 10, 10);
+		
+		tf.text = label;
+		tf.autoSize = true;
+		// legend_tf._rotation = 3.6*value.bar_bottom;
+				
+		var fmt:TextFormat = new TextFormat();
+		fmt.color = this.text_colour;
+		fmt.font = "Verdana";
+		//fmt.size = this.size;
+		fmt.align = "center";
+		tf.setTextFormat(fmt);
+		
+		return tf;
+	}
+	
+	function move_label( tf:TextField, rad:Number, x:Number, y:Number, ang:Number )
+	{
+		//text field position
+		var legend_x:Number = x+rad*Math.cos((ang)*3.6*TO_RADIANS);
+		var legend_y:Number = y+rad*Math.sin((ang)*3.6*TO_RADIANS);
+		
+		//if legend stands to the right side of the pie
+		if(legend_x<x)
+			legend_x -= tf._width;
+				
+		//if legend stands on upper half of the pie
+		if(legend_y<y)
+			legend_y -= tf._height;
+		
+		tf._x = legend_x;
+		tf._y = legend_y;
+		
+		// is this label outside the stage?
+		if( (tf._x>0) && (tf._y>0) && (tf._y+tf._height<Stage.height ) && (tf._x+tf._width<Stage.width) )
+			return false;
+		else
+			return true;
+	}
+	
+	function draw_slice( pieSlice:MovieClip, r1:Number, color:Number, slice_angle:Number )
+	{
 		//line from center to edge
-		pieSlice.lineStyle(this.border_width, this.colour, 100);
+		pieSlice.lineStyle( this.border_width, this.colour, 100 );
 
 		//if the user selected the charts to be gradient filled do gradients
 		if( this.gradientFill == 'true' )
@@ -192,7 +322,7 @@ class PieStyle extends Style
 		
 		var i:Number = 0;
 		//draw curve segments spaced by angle 
-		for( i=0; i+angle < value.bar_width*3.6; i+=angle) {
+		for( i=0; i+angle < slice_angle*3.6; i+=angle) {
 			var endx:Number = r1*Math.cos((i+angle)*TO_RADIANS);
 			var endy:Number = r1*Math.sin((i+angle)*TO_RADIANS);
 			var ax:Number = endx+r1*a*Math.cos(((i+angle)-90)*TO_RADIANS);
@@ -204,7 +334,7 @@ class PieStyle extends Style
 		var angle:Number = 0.08;
 		var a:Number = Math.tan((angle/2)*TO_RADIANS);
 		 
-		for ( ; i+angle < value.bar_width*3.6; i+=angle) {
+		for ( ; i+angle < slice_angle*3.6; i+=angle) {
 			var endx:Number = r1*Math.cos((i+angle)*TO_RADIANS);
 			var endy:Number = r1*Math.sin((i+angle)*TO_RADIANS);
 			var ax:Number = endx+r1*a*Math.cos(((i+angle)-90)*TO_RADIANS);
@@ -215,61 +345,5 @@ class PieStyle extends Style
 		//close slice
 		pieSlice.endFill();
 		pieSlice.lineTo(0,0);
-
-		//move slice to center
-		pieSlice._x = Stage.width/2;//x;
-		pieSlice._y = Stage.height/2;//y;
-		
-		//rotate slice to appropriate place in pie
-		pieSlice._rotation = 3.6*value.bar_bottom;
-		
-		if( this.labels.length>0 )
-		{
-			var labelLineSize:Number = 1.1*r1;
-			
-			//draw line 
-			pieSlice.lineStyle(1, this.colour, 100);
-			//move to center of arc
-			pieSlice.moveTo(r1*Math.cos(value.bar_width/2*3.6*TO_RADIANS), r1*Math.sin(value.bar_width/2*3.6*TO_RADIANS));
-			
-			//final line positions
-			var lineEnd_x : Number = labelLineSize*Math.cos(value.bar_width/2*3.6*TO_RADIANS);
-			var lineEnd_y : Number = labelLineSize*Math.sin(value.bar_width/2*3.6*TO_RADIANS);
-			pieSlice.lineTo(lineEnd_x, lineEnd_y);
-			
-			//text field position
-			var legend_x : Number = pieSlice._x+labelLineSize*Math.cos((value.bar_bottom+value.bar_width/2)*3.6*TO_RADIANS);
-			var legend_y : Number = pieSlice._y+labelLineSize*Math.sin((value.bar_bottom+value.bar_width/2)*3.6*TO_RADIANS);
-			
-			//create legend text field
-			if( _root["pie_text_"+num] != undefined )
-				_root["pie_text_"+num].removeTextField();
-			
-			var legend_tf:TextField = _root.createTextField("pie_text_"+num, _root.getNextHighestDepth(), legend_x, legend_y, 10, 10);
-			legend_tf.text = label;
-			legend_tf.autoSize = true;
-			legend_tf.rotation = 3.6*value.bar_bottom;
-			
-			//if legend stands to the right side of the pie
-			if(legend_x<pieSlice._x)
-				legend_tf._x -= legend_tf._width;
-				
-			//if legend stands on upper half of the pie
-			if(legend_y<pieSlice._y)
-				legend_tf._y -= legend_tf._height;
-				
-			var fmt:TextFormat = new TextFormat();
-			fmt.color = this.text_colour;
-			fmt.font = "Verdana";
-			//fmt.size = this.size;
-			fmt.align = "center";
-			legend_tf.setTextFormat(fmt);
-	
-			//pieSlice.tool_tip_title = label;
-			//pieSlice.tool_tip_value = value.tooltip;
-		
-			pieSlice._alpha = this.alpha;
-			pieSlice._alpha_original = this.alpha;	// <-- remember our original alpha while tweening
-		}
 	}
 }

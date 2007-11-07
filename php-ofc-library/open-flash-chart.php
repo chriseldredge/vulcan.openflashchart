@@ -56,6 +56,7 @@ class graph
 		$this->pie_values = '';
 		$this->pie_colours = '';
 		$this->pie_labels = '';
+                $this->pie_links = '';
 
 		$this->tool_tip = '';
 		
@@ -365,64 +366,64 @@ class graph
         $this->lines[] = $tmp;
     }
     
-	function bar_glass( $alpha, $colour, $outline_colour, $text='', $size=-1 )
-	{
-		$tmp = '&bar_glass';
+    function bar_glass( $alpha, $colour, $outline_colour, $text='', $size=-1 )
+    {
+	$tmp = '&bar_glass';
 
-		if( count( $this->lines ) > 0 )
-			$tmp .= '_'. (count( $this->lines )+1);
+	if( count( $this->lines ) > 0 )
+	    $tmp .= '_'. (count( $this->lines )+1);
 
-		$tmp .= '=';
-		$tmp .= $alpha .','. $colour .','. $outline_colour .','. $text .','. $size;
-		$tmp .= "&\r\n";;
+	$tmp .= '=';
+	$tmp .= $alpha .','. $colour .','. $outline_colour .','. $text .','. $size;
+	$tmp .= "&\r\n";;
 
-		$this->lines[] = $tmp;
-	}
+	$this->lines[] = $tmp;
+    }
 	
-	function bar_fade( $alpha, $colour='', $text='', $size=-1 )
-	{
-		$tmp = '&bar_fade';
+    function bar_fade( $alpha, $colour='', $text='', $size=-1 )
+    {
+	$tmp = '&bar_fade';
 
-		if( count( $this->lines ) > 0 )
-			$tmp .= '_'. (count( $this->lines )+1);
+	if( count( $this->lines ) > 0 )
+	    $tmp .= '_'. (count( $this->lines )+1);
 
-		$tmp .= '=';
-		$tmp .= $alpha .','. $colour .','. $text .','. $size;
-		$tmp .= "&\r\n";;
+	$tmp .= '=';
+	$tmp .= $alpha .','. $colour .','. $text .','. $size;
+	$tmp .= "&\r\n";;
 
-		$this->lines[] = $tmp;
-	}
+	$this->lines[] = $tmp;
+    }
     
     function x_axis_colour( $axis, $grid='' )
     {
-		$this->x_axis_colour = $axis;
-		$this->x_grid_colour = $grid;
-	}
-		
+	$this->x_axis_colour = $axis;
+	$this->x_grid_colour = $grid;
+    }
+
     function y_axis_colour( $axis, $grid='' )
     {
     	$this->y_axis_colour = '&y_axis_colour='. $axis .'&'."\r\n";
-		
-		if( strlen( $grid ) > 0 )
-			$this->y_grid_colour = '&y_grid_colour='. $grid .'&'."\r\n";
+
+	if( strlen( $grid ) > 0 )
+	    $this->y_grid_colour = '&y_grid_colour='. $grid .'&'."\r\n";
     }
     
     function y_right_axis_colour( $colour )
     {
-         $this->y2_axis_colour = '&y2_axis_colour='. $colour .'&'."\r\n";
+        $this->y2_axis_colour = '&y2_axis_colour='. $colour .'&'."\r\n";
     }
     
 
     function pie( $alpha, $line_colour, $label_colour )
     {
-         $this->pie = $alpha.','.$line_colour.','.$label_colour;
+        $this->pie = $alpha.','.$line_colour.','.$label_colour;
 
     }
 
     function pie_values( $values, $labels )
     {
-         $this->pie_values = implode(',',$values);
-         $this->pie_labels = implode(',',$labels);
+        $this->pie_values = implode(',',$values);
+        $this->pie_labels = implode(',',$labels);
     }
 
 
@@ -469,6 +470,10 @@ class graph
 
         if( strlen( $this->y_label_style ) > 0 )
             $tmp .= $this->y_label_style;
+        
+        if( strlen( $this->y_label_style_right ) > 0 )
+            $tmp .= $this->y_label_style_right;   
+        
 
         $tmp .= '&y_ticks=5,10,'. $this->y_steps .'&'."\r\n";
         

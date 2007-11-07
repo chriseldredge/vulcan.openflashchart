@@ -4,26 +4,27 @@
 	private var style:XLabelStyle;
 	public var labels:Array;
 
-	function XAxisLabels( lv:LoadVars, style:XLabelStyle )
+	function XAxisLabels( lv:LoadVars, style:XLabelStyle, minmax:MinMax )
 	{
 		
-		if( lv.x_labels == undefined )
-			return;
-			
-		var labels:Array = lv.x_labels.split(',');
-		
 		this.style = style;
-		
-		// what if there are more values than labels?
-		
-		//this.count = this.labels.length;
 		this.labels = [];
-
 		this.mcs = Array();
-		for( var i:Number=0; i < labels.length; i++ )
+
+		if( lv.x_labels != undefined )
 		{
-			this.add( labels[i] );
-			
+			var labels:Array = lv.x_labels.split(',');
+			// what if there are more values than labels?
+	
+			for( var i:Number=0; i < labels.length; i++ )
+			{
+				this.add( labels[i] );
+			}
+		}
+		else
+		{
+			for( var i:Number=minmax.x_min; i<=minmax.x_max; i++ )
+				this.add( _root.format( i ) );
 		}
 	}
 	
@@ -130,7 +131,7 @@
 		return height;
 	}
 	
-	function move( yPos:Number, count:Number, b:Box )
+	function move( yPos:Number, b:Box )
 	{
 		var i:Number = 0;
 		for( var pos:Number=0; pos < this.mcs.length; pos++ )

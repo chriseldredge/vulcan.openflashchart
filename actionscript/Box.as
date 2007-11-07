@@ -18,6 +18,8 @@
 	
 	private var minmax:MinMax;
 	
+	private var x_offset:Boolean;
+	
 	public function Box( top:Number, left:Number, right:Number, bottom:Number,
 						minmax:MinMax,
 						x_left_label_width:Number, x_right_label_width:Number,
@@ -53,6 +55,22 @@
 			// X axis labels need to be offset
 			this.tick_offset = 12;
 		}
+		
+		//
+		//  x_offset:
+		//
+		//   False            True
+		//
+		//  |               |
+		//  |               |
+		//  |               |
+		//  +--+--+--+      |-+--+--+--+-+
+		//  0  1  2  3        0  1  2  3 
+		//
+		this.x_offset = true;
+		
+		if( !this.x_offset )
+			this.count--;
 	}
 	
 	//
@@ -159,19 +177,48 @@
 		return this.left+padding_left;
 	}
 	
+	//
+	// get the x position by value (e.g. what is the x position for -5 ?)
+	//
+	function get_x_pos_of_val( i:Number )
+	{
+		var item_width:Number = this.width_() / this.count;
+		
+		var pos:Number = i-this.minmax.x_min;
+		
+		var tmp = 0;
+		if( this.x_offset )
+			tmp = (item_width/2);
+			
+		return this.left_()+tmp+(pos*item_width);
+	}
+	
+	//
+	// get the x position of the n'th item
+	//
 	function get_x_pos( i:Number )
 	{
 		var item_width:Number = this.width_() / this.count;
-		return this.left_()+(item_width/2)+(i*item_width);
+		
+		var tmp = 0;
+		if( this.x_offset )
+			tmp = (item_width/2);
+			
+		return this.left_()+tmp+(i*item_width);
 	}
 	
+	//
+	// get the position of the n'th X axis tick
+	//
 	function get_x_tick_pos( i:Number )
 	{
-		//var item_width:Number = (this.right-this.left_()) / this.count;
-		
 		return this.get_x_pos(i) - this.tick_offset;
 	}
 	
+	//
+	// make a point object using the X position and absolute Y pos
+	// e.g. x=wednesday, y=20
+	//
 	function make_point( x:Number, y:Number, right_axis:Boolean )
 	{
 		return new Point(
@@ -180,6 +227,20 @@
 			y
 			);
 	}
+	
+	//
+	// make a point object, using the absolute values (e.g. -5,-5 )
+	//
+	function make_point_2( x:Number, y:Number, right_axis:Boolean )
+	{
+		return new Point(
+			this.get_x_pos_of_val( x ),
+			this.getY( y, right_axis ),
+			y
+			);
+	}
+	
+	
 	
 	function make_point_bar( x:Number, y:Number, right_axis:Boolean, group:Number, group_count:Number )
 	{
