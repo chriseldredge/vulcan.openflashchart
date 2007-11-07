@@ -2,11 +2,12 @@ class NumberUtils {
 
 
 	public static function formatNumber (i:Number){
-		var format:NumberFormat = NumberFormat.getInstance();
+		var format:NumberFormat = NumberFormat.getInstance(null);
 		return NumberUtils.format (i, 
 			format.numDecimals, 
 			format.isFixedNumDecimalsForced, 
-			format.isDecimalSeparatorComma 
+			format.isDecimalSeparatorComma,
+			format.isThousandSeparatorDisabled 
 		);
 	} 
 
@@ -14,7 +15,8 @@ class NumberUtils {
 		i:Number, 
 		numDecimals:Number,
 		isFixedNumDecimalsForced:Boolean, 
-		isDecimalSeparatorComma:Boolean 
+		isDecimalSeparatorComma:Boolean,
+		isThousandSeparatorDisabled:Boolean 
 	) {
 		if ( isNaN (numDecimals )) {
 			numDecimals = 2;
@@ -43,13 +45,17 @@ class NumberUtils {
 		}
 		if( num[1] != undefined ) {
 			if (isFixedNumDecimalsForced){
-				num[1] += "0000000000";
+				num[1] += "0000000000000000";
 			}
 			s += '.'+ num[1].substr(0,numDecimals);
 		}
 			
 		if( i<0 )
 			s = '-'+s;
+		
+		if (isThousandSeparatorDisabled){
+			s=s.replace (",","");
+		}
 		
 		if (isDecimalSeparatorComma) {
 			s = toDecimalSeperatorComma(s);
