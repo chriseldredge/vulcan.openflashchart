@@ -3,74 +3,73 @@ class graph
 {
     function graph()
     {
-		$this->data = array();
-		$this->x_labels = array();
-		$this->y_min = 0;
-		$this->y_max = 20;
-		$this->y_steps = 5;
-		$this->title = '';
-		$this->title_style = '';
+	$this->data = array();
+	$this->x_labels = array();
+	$this->y_min = 0;
+	$this->y_max = 20;
+	$this->y_steps = 5;
+	$this->title = '';
+	$this->title_style = '';
 
-		$this->x_tick_size = -1;
+	$this->x_tick_size = -1;
 
-		$this->y2_max = '';
-		$this->y2_min = '';
+	$this->y2_max = '';
+	$this->y2_min = '';
 		
-		// GRID styles:
-		$this->x_axis_colour = '';
-		$this->x_axis_3d = '';
-		$this->x_grid_colour = '';
-		$this->x_axis_steps = 1;
-		$this->y_axis_colour = '';
-		$this->y_grid_colour = '';
-		$this->y2_axis_colour = '';
+	// GRID styles:
+	$this->x_axis_colour = '';
+	$this->x_axis_3d = '';
+	$this->x_grid_colour = '';
+	$this->x_axis_steps = 1;
+	$this->y_axis_colour = '';
+	$this->y_grid_colour = '';
+	$this->y2_axis_colour = '';
     
-		// AXIS LABEL styles:         
-		$this->x_label_style = '';
-		$this->y_label_style = '';
-		$this->y_label_style_right = '';
+	// AXIS LABEL styles:         
+	$this->x_label_style = '';
+	$this->y_label_style = '';
+	$this->y_label_style_right = '';
+	
+	// AXIS LEGEND styles:
+	$this->x_legend = '';
+	$this->x_legend_size = 20;
+	$this->x_legend_colour = '#000000';
+
+	$this->y_legend = '';
+	$this->y_legend_right = '';
+	//$this->y_legend_size = 20;
+	//$this->y_legend_colour = '#000000';
+
+	$this->lines = array();
+	$this->line_default = '&line=3,#87421F&'. "\r\n";
+
+	$this->bg_colour = '';
+	$this->bg_image = '';
+
+	$this->inner_bg_colour = '';
+	$this->inner_bg_colour_2 = '';
+	$this->inner_bg_angle = '';
+
+	// PIE chart ------------
+	$this->pie = '';
+	$this->pie_values = '';
+	$this->pie_colours = '';
+	$this->pie_labels = '';
+        $this->pie_links = '';
+
+	$this->tool_tip = '';
 		
-
-		// AXIS LEGEND styles:
-		$this->x_legend = '';
-		$this->x_legend_size = 20;
-		$this->x_legend_colour = '#000000';
-
-		$this->y_legend = '';
-		$this->y_legend_right = '';
-		//$this->y_legend_size = 20;
-		//$this->y_legend_colour = '#000000';
-
-		$this->lines = array();
-		$this->line_default = '&line=3,#87421F&'. "\r\n";
-
-		$this->bg_colour = '';
-		$this->bg_image = '';
-
-		$this->inner_bg_colour = '';
-		$this->inner_bg_colour_2 = '';
-		$this->inner_bg_angle = '';
-
-		// PIE chart ------------
-		$this->pie = '';
-		$this->pie_values = '';
-		$this->pie_colours = '';
-		$this->pie_labels = '';
-                $this->pie_links = '';
-
-		$this->tool_tip = '';
-		
-		// which data lines are attached to the
-		// right Y axis?
-		$this->y2_lines = array();
+	// which data lines are attached to the
+	// right Y axis?
+	$this->y2_lines = array();
     }
 
     function set_data( $a )
     {
     	if( count( $this->data ) == 0 )
-        	$this->data[] = '&values='.implode(',',$a).'&'."\r\n";
+            $this->data[] = '&values='.implode(',',$a).'&'."\r\n";
         else
-        	$this->data[] = '&values_'. (count( $this->data )+1) .'='.implode(',',$a).'&'."\r\n";
+            $this->data[] = '&values_'. (count( $this->data )+1) .'='.implode(',',$a).'&'."\r\n";
     }
 
     function set_tool_tip( $tip )
