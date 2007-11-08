@@ -48,6 +48,12 @@ class NumberUtils {
 				num[1] += "0000000000000000";
 			}
 			s += '.'+ num[1].substr(0,numDecimals);
+		} else {
+			if (isFixedNumDecimalsForced){
+				num[1] = "0000000000000000";
+				s += '.'+ num[1].substr(0,numDecimals);			
+			}
+			
 		}
 			
 		if( i<0 )
