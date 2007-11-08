@@ -1,6 +1,8 @@
 ﻿class NumberFormat
 {
-	public var numDecimals:Number = 2;
+	public static var DEFAULT_NUM_DECIMALS:Number = 2;
+	
+	public var numDecimals:Number = DEFAULT_NUM_DECIMALS;
 	public var isFixedNumDecimalsForced:Boolean = false;
 	public var isDecimalSeparatorComma:Boolean = false; 
 	public var isThousandSeparatorDisabled:Boolean = false; 
@@ -8,30 +10,10 @@
 	
 	private function NumberFormat( numDecimals:Number, isFixedNumDecimalsForced:Boolean, isDecimalSeparatorComma:Boolean, isThousandSeparatorDisabled:Boolean )
 	{
-		if ( (numDecimals!=undefined) && !isNaN( numDecimals ) ){
-			this.numDecimals = numDecimals;
-		} else {
-			this.numDecimals = 2;
-		}
-		
-		if (isFixedNumDecimalsForced != undefined ){
-			this.isFixedNumDecimalsForced = isFixedNumDecimalsForced;
-		} else {
-			this.isFixedNumDecimalsForced = false;
-		}	
-
-		
-		if (isDecimalSeparatorComma != undefined ){
-			this.isDecimalSeparatorComma = isDecimalSeparatorComma;
-		} else {
-			this.isDecimalSeparatorComma = false;
-		}			
-		
-		if (isThousandSeparatorDisabled != undefined ){
-			this.isThousandSeparatorDisabled = isThousandSeparatorDisabled;
-		} else {
-			this.isThousandSeparatorDisabled = false;
-		}			
+		this.numDecimals = Parser.getNumberValue (numDecimals, DEFAULT_NUM_DECIMALS, true, false);
+		this.isFixedNumDecimalsForced = Parser.getBooleanValue(isFixedNumDecimalsForced,false);
+		this.isDecimalSeparatorComma = Parser.getBooleanValue(isDecimalSeparatorComma,false);
+		this.isThousandSeparatorDisabled = Parser.getBooleanValue(isThousandSeparatorDisabled,false);
 	}
 	
 	
@@ -48,7 +30,7 @@
 
 	private static var _instance:NumberFormat = null;
 	
-	public static function getInstance (lv):NumberFormat{
+	public static function getInstance (lv:LoadVars):NumberFormat{
 		if (_instance == null) {
 			if (lv==undefined ||  lv == null){
 				lv=_root.lv;
@@ -60,7 +42,11 @@
 				lv.is_decimal_separator_comma,
 				lv.is_thousand_separator_disabled
 			 );
-			 //trace ("getInstance NEW!!!!");
+//			 trace ("getInstance NEW!!!!");
+//			 trace (_instance.numDecimals);
+//			 trace (_instance.isFixedNumDecimalsForced);
+//			 trace (_instance.isDecimalSeparatorComma);
+//			 trace (_instance.isThousandSeparatorDisabled);
 		} else {
 			 //trace ("getInstance found");
 		}
@@ -69,7 +55,7 @@
 
 	private static var _instanceY2:NumberFormat = null;
 	
-	public static function getInstanceY2 (lv):NumberFormat{
+	public static function getInstanceY2 (lv:LoadVars):NumberFormat{
 		if (_instanceY2 == null) {
 			if (lv==undefined ||  lv == null){
 				lv=_root.lv;
