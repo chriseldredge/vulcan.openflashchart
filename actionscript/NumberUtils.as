@@ -10,6 +10,16 @@ class NumberUtils {
 			format.isThousandSeparatorDisabled 
 		);
 	} 
+	
+	public static function formatNumberY2 (i:Number){
+		var format:NumberFormat = NumberFormat.getInstanceY2(null);
+		return NumberUtils.format (i, 
+			format.numDecimals, 
+			format.isFixedNumDecimalsForced, 
+			format.isDecimalSeparatorComma,
+			format.isThousandSeparatorDisabled 
+		);
+	} 	
 
 	public static function format( 
 		i:Number, 
@@ -49,7 +59,7 @@ class NumberUtils {
 			}
 			s += '.'+ num[1].substr(0,numDecimals);
 		} else {
-			if (isFixedNumDecimalsForced){
+			if (isFixedNumDecimalsForced && numDecimals>0){
 				num[1] = "0000000000000000";
 				s += '.'+ num[1].substr(0,numDecimals);			
 			}
