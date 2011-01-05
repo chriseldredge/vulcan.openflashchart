@@ -389,7 +389,12 @@ function mouse_move()
 		_root.chartValues.styles[i].highlight_value();
 }
 
-
+function mouse_release()
+{
+	for( var i:Number=0; i < _root.chartValues.styles.length; i++)
+		_root.chartValues.styles[i].mouse_release();
+}
+	
 
 function hide_oops()
 {
@@ -566,6 +571,7 @@ function make_chart()
 	// the flash movie (.swf) and remove the tooltip
 	//
 	_root._inv = new Invisible();
+	_root.mc2.onRelease = _root.mouse_release;
 	
 }
 
