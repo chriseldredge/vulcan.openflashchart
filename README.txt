@@ -1,8 +1,5 @@
-Hello.
+This is a clone of the Subversion repository:
 
-This is the Open Flash Chart source code.
+https://openflashchart.svn.sourceforge.net/svnroot/openflashchart@46
 
-Take a look around :-)
-
-The test data is in the 'data-files' directory.
-
+This clone has some customizations that were made to support enhancements used by Vulcan.
