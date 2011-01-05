@@ -5,7 +5,6 @@ class PieStyle extends Style
 {
 	var TO_RADIANS:Number = Math.PI/180;
 	var labels:Array;
-	var links:Array;
 	var colours:Array;
 	
 	var text_colour:Number;
@@ -21,14 +20,13 @@ class PieStyle extends Style
 	public function PieStyle( lv:LoadVars, name:String )//, links:String )
 	{
 		this.labels = new Array();
-		this.links = new Array();
 		this.colours = new Array();
 		
 		this.name = name;
 		
 		this.parse( lv.pie );
 		this.labels = lv.pie_labels.split(',');
-		this.links = lv.links.split(',');
+		set_links(lv.links.split(','));
 		
 		var tmp:Array;
 		if( lv.colours != undefined )

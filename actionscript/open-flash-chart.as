@@ -389,7 +389,12 @@ function mouse_move()
 		_root.chartValues.styles[i].highlight_value();
 }
 
-
+function mouse_release()
+{
+	for( var i:Number=0; i < _root.chartValues.styles.length; i++)
+		_root.chartValues.styles[i].mouse_release();
+}
+	
 
 function hide_oops()
 {
@@ -571,6 +576,7 @@ function make_chart()
 		_root.tooltip_x.hide();
 		};
 	_root.mc2.onMouseMove = _root.mouse_move;
+	_root.mc2.onRelease = _root.mouse_release;
 	_root.mc2.useHandCursor = false;
 	
 }
