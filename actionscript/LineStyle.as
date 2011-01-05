@@ -44,13 +44,20 @@
 			{
 				var tmp:Point = b.make_point( i, Number(this.values[i]), right_axis );
 				
-				tmp.make_tooltip(
-					_root.get_tooltip_string(),
-					this.key,
-					Number(this.values[i]),
-					_root.get_x_legend(),
-					_root.get_x_axis_label(i)
-					);
+				if (this.tool_tips != null && this.tool_tips.length > i)
+				{
+					tmp.tooltip = this.tool_tips[i];
+				}
+				else
+				{
+					tmp.make_tooltip(
+						_root.get_tooltip_string(),
+						this.key,
+						Number(this.values[i]),
+						_root.get_x_legend(),
+						_root.get_x_axis_label(i)
+						);
+				}
 				
 				this.ExPoints.push( tmp );
 			}
@@ -84,21 +91,16 @@
 	
 	public function highlight_value()
 	{
-		var found:Boolean = false;
+		var index = get_tip_index();
 		
-		for( var i:Number=0; i < this.ExPoints.length; i++ )
-		{
-			if( this.ExPoints[i].is_tip )
-			{
-				this.mc2._x = this.ExPoints[i].x;
-				this.mc2._y = this.ExPoints[i].y;
-				this.mc2._visible = true;
-				found = true;
-				break;
-			}
-		}
-		if( !found )
+		if (index < 0) {
 			this.mc2._visible = false;
+			return;
+		}
+		
+		this.mc2._x = this.ExPoints[index].x;
+		this.mc2._y = this.ExPoints[index].y;
+		this.mc2._visible = true;
 	}
 	
 	private function rollOver()

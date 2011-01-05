@@ -1,0 +1,12 @@
+&title=Detailed Tool Tips,{font-size: 30px;}&
+&y_legend=Open Flash Chart,12,0x736AFF&
+&y_ticks=5,10,4&
+
+&line=2,0x9933CC,Page views,10&
+&values=15,18,19&
+
+&x_labels=January,February,March&
+&y_min=0&
+&y_max=20&
+
+&tool_tips=Value: 15<br>Unique Visitors:1,Value: 18<br>Unique Visitors:12,Value: 19<br>Unique Visitors:19&
